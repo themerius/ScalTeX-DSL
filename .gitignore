@@ -7,3 +7,9 @@
 *.ear
 
 Xtext/.metadata/*
+Xtext/de.htwg.scaltex.dsl.tests/src-gen/*
+Xtext/de.htwg.scaltex.dsl.ui/src-gen/*
+Xtext/de.htwg.scaltex.dsl/src-gen/*
+Xtext/de.htwg.scaltex.dsl/bin/*
+Xtext/de.htwg.scaltex.dsl.ui/bin/*
+Xtext/de.htwg.scaltex.dsl/xtend-gen/*
