@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.htwg.de/scaltex/dsl/ScalTeX" 
+       class = "de.htwg.scaltex.dsl.scalTeX.ScalTeXPackage"
+       genModel = "de/htwg/scaltex/dsl/ScalTeX.genmodel" /> 
+	
+  </extension>
+
+
+
+
+</plugin>

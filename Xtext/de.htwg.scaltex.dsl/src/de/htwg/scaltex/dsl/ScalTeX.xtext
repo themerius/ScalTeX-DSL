@@ -2,8 +2,32 @@ grammar de.htwg.scaltex.dsl.ScalTeX with org.eclipse.xtext.common.Terminals
 
 generate scalTeX "http://www.htwg.de/scaltex/dsl/ScalTeX"
 
-Model:
-	greetings+=Greeting*;
-	
-Greeting:
-	'Hello' name=ID '!';
+Scaltex:
+	elements += Type*
+;
+
+Type:
+	Entity
+;
+
+Entity:
+	name = ID ('named' entityName = STRING)? ('with' config += Config*)? ('from' option += Option*)?
+		text += TEXTTERM
+;
+
+Config:
+	name = ID ','?
+;
+
+Option:
+	name = ID ','?
+;
+
+terminal TEXTTERM :
+	'{' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'{'|'}') )* '}'
+;
+
+terminal STRING  : 
+  '~' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'~') )* '~' |
+  "'" ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|"'") )* "'" |
+  '"' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"') )* '"' ;
