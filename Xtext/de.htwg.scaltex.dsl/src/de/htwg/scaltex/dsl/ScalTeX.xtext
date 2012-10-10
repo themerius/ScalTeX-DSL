@@ -1,0 +1,9 @@
+grammar de.htwg.scaltex.dsl.ScalTeX with org.eclipse.xtext.common.Terminals
+
+generate scalTeX "http://www.htwg.de/scaltex/dsl/ScalTeX"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';
