@@ -3,16 +3,12 @@ grammar de.htwg.scaltex.dsl.ScalTeX with org.eclipse.xtext.common.Terminals
 generate scalTeX "http://www.htwg.de/scaltex/dsl/ScalTeX"
 
 Scaltex:
-	elements += Type*
-;
-
-Type:
-	Entity
+	entities += Entity*
 ;
 
 Entity:
 	name = ID ('named' entityName = STRING)? ('with' config += Config*)? ('from' option += Option*)?
-		text += TEXTTERM
+		text += TEXT
 ;
 
 Config:
@@ -23,7 +19,7 @@ Option:
 	name = ID ','?
 ;
 
-terminal TEXTTERM :
+terminal TEXT :
 	'{' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'{'|'}') )* '}'
 ;
 
