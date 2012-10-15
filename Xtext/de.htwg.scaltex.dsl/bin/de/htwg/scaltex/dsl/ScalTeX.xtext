@@ -8,7 +8,7 @@ Scaltex:
 
 Entity:
 	name = ID ('named' entityName = STRING)? ('with' config += Config*)? ('from' option += Option*)?
-		text += TEXT
+		text += MYSTRING
 ;
 
 Config:
@@ -19,11 +19,9 @@ Option:
 	name = ID ','?
 ;
 
-terminal TEXT :
-	'{' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'{'|'}') )* '}'
-;
+//terminal TEXT :
+//	'{' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'{'|'}') )* '}'
+//;
 
-terminal STRING  : 
-  '~' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'~') )* '~' |
-  "'" ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|"'") )* "'" |
-  '"' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"') )* '"' ;
+terminal MYSTRING  : 
+  '"""' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"""') )* '"""' ;

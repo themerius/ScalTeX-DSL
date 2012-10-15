@@ -17,13 +17,13 @@ class ParserTest {
   @Test 
   def void parseDomainmodel() {
     val model = parser.parse(
-      "Section {
+      '''Section """
            Text...
-      }")
+      """''')
     val entity = model.entities.head
     assertEquals(entity.name, "Section")
-    assertEquals(entity.text.head, "{
+    assertEquals(entity.text.head, '''"""
            Text...
-      }")
+      """'''.toString())
   }
 }
