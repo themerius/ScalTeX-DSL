@@ -1,11 +1,12 @@
 *.DS_Store
 *.class
 
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.ear
 
+# Xtext
 Xtext/.metadata/*
 Xtext/de.htwg.scaltex.dsl.tests/src-gen/*
 Xtext/de.htwg.scaltex.dsl.ui/src-gen/*
@@ -17,3 +18,8 @@ Xtext/de.htwg.scaltex.dsl.ui/bin/*
 Xtext/de.htwg.scaltex.dsl/xtend-gen/*
 
 runtime-EclipseXtext/*
+
+
+# Scala
+Scala/project/*
+Scala/target/*
