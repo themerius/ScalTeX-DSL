@@ -1,15 +1,34 @@
 object § {
-  def > (input: String) = {
-    println(input.trim)
+  def > (input: String) = println(input)
+  def >> (input: String) = println(input)
+}
+
+object ^ {
+  def txt (input: String) = println(input.trim)
+  def figure (src: String, desc: String) = println("Figure", src, desc)
+  def table (input: List[Any]*) = {
+    for (item <- input)
+      println(item)
+  }
+}
+
+object !! {  // limit: ! alone doesn't work properly
+  def SpecialPage = println("SpecialPage")
+  def NormalPage = println("NormalPage")
+}
+
+object ScalTexImplicits {
+  class StringHelper (s: String) {
+    def bold = println("Bold String: ", this.s)
   }
 
-  def >> (input: String) = {
-    println(input.trim)
-  }
+  implicit def String2StringHelper(s: String) = new StringHelper(s)
 }
 
 object Idea2 {
   def main(args: Array[String]) {
+
+    import ScalTexImplicits._
 
     /*
     object configs {
@@ -22,7 +41,7 @@ object Idea2 {
     //@Label("name") // dem ding einen namen geben ... macht aber alles ein bisschen noisy. wie impliziter ausdrücken?
     § >> "Unterüberschrift"
 
-    /*
+
     ^ txt """
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
       sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
@@ -30,26 +49,39 @@ object Idea2 {
       duo dolores et ea rebum. Stet clita kasd gubergren,
     """
 
-    ^ figure {
+    ^ figure (
       src="/home/pic",
       desc="Hallo Pic"
-    }
+    )
 
-    ! SpecialPage
+    !! SpecialPage  // or also PageBreak, ...
 
-    ^ table {
+    ^ table (
       "Nr".bold :: "Quadratmeter" :: "Energievertrauch" :: Nil,
       "1"       :: 125            :: List(200, 300) :: Nil,
-      "1"       :: 150            :: 275 :: Nil
-    }
+      "2"       :: 150            :: 275 :: Nil
+    )
 
+    /*
     var listConfig = new ListConfig(bullettype="*") // ausführliche konfigurationen
     ^ list("*") // auch mit List oder auch als md liste...
-
-    ! NormalPage
-
-    ...
     */
+
+    /*
+    ^ list {
+      * "Item 1"
+      * "Item 2"
+    }
+
+    ^ list """
+      * markdown
+      * liste
+    """
+    */
+
+    !! NormalPage
+
+    // ...
   }
 }
 
