@@ -1,6 +1,13 @@
 object § {
-  def > (input: String) = println(input)
-  def >> (input: String) = println(input)
+  def > (input: String) = println(input)  // oder ' (Überschrift 1. Ordnung)
+  def >> (input: String) = println(input) // oder '' (Überschrift 2. Ordnung) etc.
+}
+
+class ListItem {
+  def * (input: String): ListItem = {
+    println("ListItem: ", input)
+    new ListItem
+  }
 }
 
 object ^ {
@@ -10,6 +17,7 @@ object ^ {
     for (item <- input)
       println(item)
   }
+  def list = new ListItem
 }
 
 object !! {  // limit: ! alone doesn't work properly
@@ -67,12 +75,12 @@ object Idea2 {
     ^ list("*") // auch mit List oder auch als md liste...
     */
 
-    /*
-    ^ list {
+    ((^ list)
       * "Item 1"
       * "Item 2"
-    }
+    )
 
+    /*
     ^ list """
       * markdown
       * liste
