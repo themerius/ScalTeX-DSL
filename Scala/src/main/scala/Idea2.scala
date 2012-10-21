@@ -12,12 +12,24 @@ class ListItem {
 
 object ^ {
   def txt (input: String) = println(input.trim)
+  def html (input: scala.xml.Elem) = println(input)
   def figure (src: String, desc: String) = println("Figure", src, desc)
   def table (input: List[Any]*) = {
     for (item <- input)
       println(item)
   }
   def list = new ListItem
+  def list (li: ListItem) = println(li)
+  def list (input: String) = println(input)
+}
+
+object & {
+  def book (
+    titel: String = "",
+    autors: List[String] = "" :: Nil,
+    pubDate: String = "",
+    publisher: String = ""
+  ) = println("Book: ", titel, autors, pubDate, publisher)
 }
 
 object !! {  // limit: ! alone doesn't work properly
@@ -40,18 +52,19 @@ object Idea2 {
 
     /*
     object configs {
-      def list = new ListConfig...
+      def list = new ListConfig...  // via DI implizit einbringen?
     }*/
 
     //val bla =
     § > "Überschrift"
 
     //@Label("name") // dem ding einen namen geben ... macht aber alles ein bisschen noisy. wie impliziter ausdrücken?
-    § >> "Unterüberschrift"
+    § > "Unterüberschrift"
 
+    val ref = 42
 
-    ^ txt """
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+    ^ txt s"""
+      Lorem ${ref} ipsum dolor sit amet, consetetur sadipscing elitr,
       sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
       aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
       duo dolores et ea rebum. Stet clita kasd gubergren,
@@ -80,44 +93,40 @@ object Idea2 {
       * "Item 2"
     )
 
-    /*
+    ^ list (new ListItem
+      * "Other item 1"
+      * "Other item 2"
+    )
+
     ^ list """
       * markdown
       * liste
     """
-    */
 
     !! NormalPage
 
+    ^ html <p>
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
+      sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+      aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
+      duo dolores et ea rebum. Stet clita kasd gubergren,
+    </p>
+
     // ...
+
+    & book (
+      titel = "Titel",
+      autors = "Autor 1" :: "Autor 2" :: Nil,
+      pubDate = "1.1.1970",
+      publisher = "HTWG Konstanz"
+    )
   }
 }
 
 
 /*
-// Sind dann nur Aliasse/Abkürzungen dazu!
-// Mal Außenstehende fragen?
-§ "Hallo Welt"
-
-^ """
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
-sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-aliquyam erat, sed diam voluptua. At vero eos et accusam et justo
-duo dolores et ea rebum. Stet clita kasd gubergren,
-"""
-
-¶ """
-Absatz
-"""
-
-^ (template=Y) """
-Blablub
-"""
-
-* as SpecialTable """
-  * Bla blub
-  * blub Bla
-"""
-
-Book "Title" autors "Autor 1, Autor 2" pubDate "1.1.1970" institution "Uni X"
+§ == Überschriften, Titel, ...
+^ == Universelle Entities
+_ == Referenzen
+!! == Steuerbefehle (z.B. Seitenumbrüche (oder sogar Konfigurationen?))
 */
