@@ -1,7 +1,15 @@
 import scaltex.api._
 
+class MyArticleTemplate extends scaltex.logic.Tray {
+  def unpack = {
+    for (entity <- entities)
+      println(entity.json)
+  }
+}
+
 object Main {
   def main(args: Array[String]) {
+
     § > "Überschrift"
 
     ^ txt """
@@ -11,5 +19,6 @@ object Main {
     """
 
     println(scaltex.logic.Tray.get)
+    println( (new MyArticleTemplate).unpack )
   }
 }
