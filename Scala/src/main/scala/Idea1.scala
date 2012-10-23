@@ -1,3 +1,5 @@
+package idea1
+
 class Content {
   def txt (input: String) = println(input.trim)
   def html (input: scala.xml.Elem) = println(input)

@@ -1,3 +1,5 @@
+package idea2
+
 object § {
   def > (input: String) = println(input)  // oder ' (Überschrift 1. Ordnung)
   def >> (input: String) = println(input) // oder '' (Überschrift 2. Ordnung) etc.
@@ -59,7 +61,7 @@ object Idea2 {
     § > "Überschrift"
 
     //@Label("name") // dem ding einen namen geben ... macht aber alles ein bisschen noisy. wie impliziter ausdrücken?
-    § > "Unterüberschrift"
+    § >> "Unterüberschrift"
 
     val ref = 42
 
@@ -93,7 +95,7 @@ object Idea2 {
       * "Item 2"
     )
 
-    ^ list (new ListItem
+    ^ list (new ListItem  // das ist ja sowas wie inline Konfiguration?
       * "Other item 1"
       * "Other item 2"
     )
