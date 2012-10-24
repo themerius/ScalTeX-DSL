@@ -5,8 +5,7 @@ import scaltex.logic
 object § {
   def > (input: String) = {
     val h = new logic.Heading(input)
-    logic.Tray.add(h)
-    logic.Tray.headings
+    h
   }
   def >> (input: String) = println(input)
 }
@@ -14,8 +13,7 @@ object § {
 object ^ {
   def txt (input: String) = {
     val t = new logic.Text(input)
-    logic.Tray.add(t)
-    logic.Tray.texts
+    t
   }
   def html (input: scala.xml.Elem) = println(input)
   def figure (src: String, desc: String) = println("Figure", src, desc)
