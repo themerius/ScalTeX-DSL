@@ -1,8 +1,4 @@
-import scaltex.api._
-import java.io.{OutputStreamWriter, FileOutputStream}
-
-class MyArticleTemplate extends scaltex.logic.Tray {
-  def htmlHead = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -19,9 +15,7 @@ class MyArticleTemplate extends scaltex.logic.Tray {
 
 <div id="TitlepageAreal"></div>
 <div id="DocumentAreal"></div>
-"""
 
-  def htmlTemplates = """
 <script id="titlepage" type="text/template">
 <div class="pageA4">
   <div id="{{{appendPoint_logo}}}"></div>
@@ -117,15 +111,13 @@ class MyArticleTemplate extends scaltex.logic.Tray {
   <div class="row-end">&nbsp;</div>
 </div>
 </script>
-"""
 
-  def htmlMainScript(entities: String) = s"""
 <script>
 var seq = [
   {
     pageType: "A4",
     entities: [
-      $entities
+      {"templateId":"heading","json":{"id":0,"heading":"Überschrift","h":"h1","number":1}},{"templateId":"heading","json":{"id":1,"heading":"Unterüberschrift","h":"h2","number":2}},{"templateId":"text_1110","json":{"id":2,"text":"\n      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam\n      nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,\n      sed diam voluptua.\n    "}},{"templateId":"heading","json":{"id":3,"heading":"Beispiel","h":"h1","number":3}},{"templateId":"heading","json":{"id":4,"heading":"Konkretes Beispiel","h":"h2","number":4}},
     ]
   }
 ];
@@ -163,50 +155,9 @@ window.onload = function () {
 
 // Mathjax Config
 MathJax.Hub.Config({
-  tex2jax: {inlineMath: [ ['$$','$$'], ["\\(","\\)"] ]}
+  tex2jax: {inlineMath: [ ['$','$'], ["\(","\)"] ]}
 });
 </script>
-"""
 
-  def htmlFoot = """
 </body>
 </html>
-"""
-
-  def unpack = {
-    var ret = ""
-    for (entity <- entities)
-      ret += entity.json + ","
-    ret
-  }
-
-  def write = {
-    val out = new OutputStreamWriter(
-      new FileOutputStream("output.html"), "UTF-8")
-    out.append(this.htmlHead + this.htmlTemplates + this.htmlMainScript(this.unpack) + this.htmlFoot)
-    out.close
-  }
-
-}
-
-object Main {
-  def main(args: Array[String]) {
-
-    § > "Überschrift"
-
-    § >> "Unterüberschrift"
-
-    ^ txt """
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-      nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-      sed diam voluptua.
-    """
-
-    § > "Beispiel"
-
-    § >> "Konkretes Beispiel"
-
-    (new MyArticleTemplate).write
-    println((new MyArticleTemplate).unpack)
-  }
-}

@@ -1,0 +1,27 @@
+.tocNumbering {
+	float: right;
+	text-align: left;
+	width: 7%;
+	position: absolute;
+}
+
+.tocTitle {
+	width: 93%;
+	display: inline-block;
+}
+
+.tocFloatingDots {
+	white-space: nowrap;
+	overflow: hidden;
+	word-spacing: 2pt;
+	display: inline-block;
+}
+
+.tocHeading {
+	margin-bottom: 16.932mm;
+}
+
+.tocMainSection {
+	font-weight: bold;
+}
+

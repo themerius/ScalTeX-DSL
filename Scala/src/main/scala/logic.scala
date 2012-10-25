@@ -8,8 +8,9 @@ trait Entity {
   def json: String
 }
 
-class Heading (heading: String) extends Entity {
+class Heading (heading: String, h: String = "h1") extends Entity {
 
+  val number = getNumber
   Tray.add(this)
 
   def json = Json.toJson(
@@ -18,11 +19,22 @@ class Heading (heading: String) extends Entity {
       "json" -> Json.toJson(
         Map(
           "id" -> Json.toJson(this.id),
-          "heading" -> Json.toJson(this.heading)
+          "heading" -> Json.toJson(this.heading),
+          "h" -> Json.toJson(this.h),
+          "number" -> Json.toJson(this.number)
         )
       )
     )
   ).toString
+
+  def getNumber = Tray.tray.filter {
+    (x: Entity) => {
+      x match {
+        case x: Heading => true
+        case _ => false
+      }
+    }
+  }.length + 1
 }
 
 class Text (txt: String) extends Entity {

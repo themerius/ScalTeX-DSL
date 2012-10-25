@@ -4,10 +4,19 @@ import scaltex.logic
 
 object § {
   def > (input: String) = {
-    val h = new logic.Heading(input)
+    val h = new logic.Heading(input, "h1")
     h
   }
-  def >> (input: String) = println(input)
+
+  def >> (input: String) = {
+    val h = new logic.Heading(input, "h2")
+    h
+  }
+
+  def >>> (input: String) = {
+    val h = new logic.Heading(input, "h3")
+    h
+  }
 }
 
 object ^ {
