@@ -8,10 +8,10 @@ trait Entity {
   def json: String
 }
 
-class Heading (heading: String, h: String = "h1") extends Entity {
+case class Heading (heading: String, h: String = "h1") extends Entity {
 
-  val number = getNumber
   Tray.add(this)
+  val number = getNumber
 
   def json = Json.toJson(
     Map(
@@ -27,14 +27,27 @@ class Heading (heading: String, h: String = "h1") extends Entity {
     )
   ).toString
 
-  def getNumber = Tray.tray.filter {
-    (x: Entity) => {
-      x match {
-        case x: Heading => true
-        case _ => false
+  def getNumber: String = {
+    var h1Count = 0
+    var h2Count = 0
+    val headings = Tray.tray.filter( _.isInstanceOf[Heading])
+    for (heading <- headings) {
+      heading match {
+        case Heading(_, "h1") => {
+          h1Count += 1
+          h2Count = 0
+        }
+        case Heading(_, "h2") => h2Count += 1
+        case _ => throw new Exception("This should not happen.")
       }
     }
-  }.length + 1
+
+    var res = ""
+    if (this.h == "h1") res += (h1Count).toString
+    if (this.h == "h2") res += (h1Count).toString + "." + h2Count.toString
+
+    res
+  }
 }
 
 class Text (txt: String) extends Entity {

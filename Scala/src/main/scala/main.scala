@@ -182,7 +182,7 @@ MathJax.Hub.Config({
 
   def write = {
     val out = new OutputStreamWriter(
-      new FileOutputStream("output.html"), "UTF-8")
+      new FileOutputStream("_output/output.html"), "UTF-8")
     out.append(this.htmlHead + this.htmlTemplates + this.htmlMainScript(this.unpack) + this.htmlFoot)
     out.close
   }
@@ -205,6 +205,12 @@ object Main {
     § > "Beispiel"
 
     § >> "Konkretes Beispiel"
+
+    § >> "Fazit"
+
+    ^ txt """
+      Lorem <em>ipsum</em>!
+    """
 
     (new MyArticleTemplate).write
     println((new MyArticleTemplate).unpack)
