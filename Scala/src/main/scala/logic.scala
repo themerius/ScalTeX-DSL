@@ -53,6 +53,7 @@ case class Heading (heading: String, h: String = "h1") extends Entity {
 class Text (txt: String) extends Entity {
 
   Tray.add(this)
+  var newline: List[Boolean] = List()
 
   def json = Json.toJson(
     Map(
@@ -60,7 +61,8 @@ class Text (txt: String) extends Entity {
       "json" -> Json.toJson(
         Map(
           "id" -> Json.toJson(this.id),
-          "text" -> Json.toJson(this.txt)
+          "text" -> Json.toJson(this.txt),
+          "newline" -> Json.toJson(this.newline)
         )
       )
     )

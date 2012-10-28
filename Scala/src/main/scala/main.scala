@@ -196,6 +196,7 @@ object Main {
 
     § >> "Unterüberschrift"
 
+    val text_1 =
     ^ txt """
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
       nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
@@ -212,6 +213,11 @@ object Main {
       Lorem <em>ipsum</em>!
     """
 
+
+    // config
+    text_1 newline = true :: true :: Nil
+
+    // excec
     (new MyArticleTemplate).write
     println((new MyArticleTemplate).unpack)
   }
