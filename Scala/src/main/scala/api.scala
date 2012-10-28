@@ -25,7 +25,7 @@ object ^ {
     t
   }
   def html (input: scala.xml.Elem) = println(input)
-  def figure (src: String, desc: String) = println("Figure", src, desc)
+  def figure (src: String, desc: String) = new logic.Figure(src, desc)
   def table (input: List[Any]*) = {
     for (item <- input)
       println(item)

@@ -196,6 +196,7 @@ object Main {
 
     § >> "Unterüberschrift"
 
+    // lazy val, promise?
     val text_1 =
     ^ txt """
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -213,9 +214,16 @@ object Main {
       Lorem <em>ipsum</em>!
     """
 
+    val fig =
+    ^ figure(
+      src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
+      desc="Matplotlib example histogramm"
+    )
+
 
     // config
     text_1 newline = true :: true :: Nil
+    println(fig number)
 
     // excec
     (new MyArticleTemplate).write

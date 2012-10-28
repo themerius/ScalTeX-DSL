@@ -69,6 +69,28 @@ class Text (txt: String) extends Entity {
   ).toString
 }
 
+class Figure (src: String, desc: String) extends Entity {
+
+  Tray.add(this)
+  val number = getNumber
+
+  def json = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson("figure_1100"),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(this.id),
+          "src" -> Json.toJson(this.src),
+          "description" -> Json.toJson(this.desc),
+          "number" -> Json.toJson(this.number)
+        )
+      )
+    )
+  ).toString
+
+  def getNumber: String = Tray.tray.filter(_.isInstanceOf[Figure]).length.toString
+}
+
 object Tray {
   val tray = ListBuffer.empty[Entity]
   def add(e: Entity) = tray += e
