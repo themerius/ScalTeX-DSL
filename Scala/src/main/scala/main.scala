@@ -27,10 +27,14 @@ object Main {
 
   § >> "Konkretes Beispiel"
 
-  § >> "Fazit!"
+  § >> "Fazit"
+
+  § >>> "Überschrift 3. Ordnung"
 
   ^ txt """
-    Lorem <em>ipsum</em>!
+    <em>Lorem ipsum</em> dolor sit amet, consetetur sadipscing elitr, sed diam
+    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+    sed diam voluptua.
   """
 
   val fig =

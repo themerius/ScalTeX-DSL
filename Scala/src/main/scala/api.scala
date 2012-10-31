@@ -4,27 +4,13 @@ import scala.language.implicitConversions
 import scaltex.logic
 
 object § {
-  def > (input: String) = {
-    val h = new logic.Heading(input, "h1")
-    h
-  }
-
-  def >> (input: String) = {
-    val h = new logic.Heading(input, "h2")
-    h
-  }
-
-  def >>> (input: String) = {
-    val h = new logic.Heading(input, "h3")
-    h
-  }
+  def > (input: String) = new logic.Heading(input, "h1")
+  def >> (input: String) = new logic.Heading(input, "h2")
+  def >>> (input: String) = new logic.Heading(input, "h3")
 }
 
 object ^ {
-  def txt (input: String) = {
-    val t = new logic.Text(input)
-    t
-  }
+  def txt (input: String) = new logic.Text(input)
   def txtref (input: () => String) = new logic.TextWithRef(input)
   def html (input: scala.xml.Elem) = println(input)
   def figure (src: String, desc: String) = new logic.Figure(src, desc)

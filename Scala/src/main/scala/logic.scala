@@ -30,6 +30,7 @@ case class Heading (heading: String, h: String = "h1") extends Entity {
   def getNumber: String = {
     var h1Count = 0
     var h2Count = 0
+    var h3Count = 0
     val headings = Tray.tray.filter( _.isInstanceOf[Heading])
     for (heading <- headings) {
       heading match {
@@ -37,15 +38,19 @@ case class Heading (heading: String, h: String = "h1") extends Entity {
           h1Count += 1
           h2Count = 0
         }
-        case Heading(_, "h2") => h2Count += 1
+        case Heading(_, "h2") => {
+          h2Count += 1
+          h3Count = 0
+        }
+        case Heading(_, "h3") => h3Count += 1
         case _ => throw new Exception("This should not happen.")
       }
     }
 
     var res = ""
-    if (this.h == "h1") res += (h1Count).toString
-    if (this.h == "h2") res += (h1Count).toString + "." + h2Count.toString
-
+    if (this.h == "h1") res += h1Count
+    if (this.h == "h2") res += h1Count + "." + h2Count
+    if (this.h == "h3") res += h1Count + "." + h2Count + "." + h3Count
     res
   }
 }
@@ -114,9 +119,6 @@ object Tray {
   val tray = ListBuffer.empty[Entity]
   def add(e: Entity) = tray += e
   def get = tray.toList
-
-  def headings = "Headings"  // filter for headings
-  def texts = "Texts"  // filter for texts
 }
 
 class Tray {
