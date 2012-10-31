@@ -1,5 +1,6 @@
 package scaltex.api
 
+import scala.language.implicitConversions
 import scaltex.logic
 
 object § {
