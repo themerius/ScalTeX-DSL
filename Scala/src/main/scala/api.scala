@@ -24,6 +24,7 @@ object ^ {
     val t = new logic.Text(input)
     t
   }
+  def txtref (input: () => String) = new logic.TextWithRef(input)
   def html (input: scala.xml.Elem) = println(input)
   def figure (src: String, desc: String) = new logic.Figure(src, desc)
   def table (input: List[Any]*) = {

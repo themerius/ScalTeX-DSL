@@ -190,40 +190,50 @@ MathJax.Hub.Config({
 }
 
 object Main {
+
+  § > "Überschrift"
+
+  § >> "Unterüberschrift"
+
+  ^ txt """
+    Lorem ipsum Abb. ${fig.number} dolor sit amet, consetetur sadipscing elitr, sed diam
+    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+    sed diam voluptua.
+  """
+
+  val text_1 =
+  ^ txtref (() => s"""
+    Lorem ipsum Abb. ${fig.number} dolor sit amet, consetetur sadipscing elitr, sed diam
+    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+    sed diam voluptua.
+  """
+  )
+
+  val y = () => {
+    s"Abb ${fig.number} bla"
+  }
+
+  § > "Beispiel"
+
+  § >> "Konkretes Beispiel"
+
+  § >> "Fazit"
+
+  ^ txt """
+    Lorem <em>ipsum</em>!
+  """
+
+  val fig =
+  ^ figure(
+    src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
+    desc="Matplotlib example histogramm"
+  )
+
   def main(args: Array[String]) {
-
-    § > "Überschrift"
-
-    § >> "Unterüberschrift"
-
-    // lazy val, promise?
-    val text_1 =
-    ^ txt """
-      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-      nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-      sed diam voluptua.
-    """
-
-    § > "Beispiel"
-
-    § >> "Konkretes Beispiel"
-
-    § >> "Fazit"
-
-    ^ txt """
-      Lorem <em>ipsum</em>!
-    """
-
-    val fig =
-    ^ figure(
-      src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
-      desc="Matplotlib example histogramm"
-    )
-
-
     // config
     text_1 newline = true :: true :: Nil
     println(fig number)
+    println(y())
 
     // excec
     (new MyArticleTemplate).write

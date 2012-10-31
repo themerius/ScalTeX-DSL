@@ -69,6 +69,25 @@ class Text (txt: String) extends Entity {
   ).toString
 }
 
+class TextWithRef (txt: () => String) extends Entity {
+
+  Tray.add(this)
+  var newline: List[Boolean] = List()
+
+  def json = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson("text_1110"),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(this.id),
+          "text" -> Json.toJson(this.txt()),
+          "newline" -> Json.toJson(this.newline)
+        )
+      )
+    )
+  ).toString
+}
+
 class Figure (src: String, desc: String) extends Entity {
 
   Tray.add(this)
