@@ -7,21 +7,21 @@ Scaltex:
 ;
 
 Entity:
-	name = ID ('named' entityName = STRING)? ('with' config += Config*)? ('from' option += Option*)?
-		text += MYSTRING
+	entity = (Heading | UniversalEntities | ControlCommand)
 ;
 
-Config:
-	name = ID ','?
+Heading:
+	'§' ('>' | '>>' | '>>>') content += STRING
 ;
 
-Option:
-	name = ID ','?
+UniversalEntities:
+	'^' name = ID
+		content += STRING
 ;
 
-//terminal TEXT :
-//	'{' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'{'|'}') )* '}'
-//;
+ControlCommand:
+	'!!' name = ID
+;
 
-terminal MYSTRING  : 
+terminal MULTILINESTRING: 
   '"""' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"""') )* '"""' ;

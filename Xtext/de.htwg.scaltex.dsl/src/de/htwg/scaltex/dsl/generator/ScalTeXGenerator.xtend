@@ -9,28 +9,31 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import de.htwg.scaltex.dsl.scalTeX.Entity
 import com.google.inject.Inject
 import org.eclipse.xtext.naming.IQualifiedNameProvider
+import de.htwg.scaltex.dsl.scalTeX.Heading
+import de.htwg.scaltex.dsl.scalTeX.Scaltex
 
 class ScalTeXGenerator implements IGenerator {
 	
 	@Inject extension IQualifiedNameProvider
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		for(e: resource.allContents.toIterable.filter(typeof(Entity))) {
+		for(e: resource.allContents.toIterable.filter(typeof(Scaltex))) {
       		fsa.generateFile(
-        		e.fullyQualifiedName.toString("/") + ".java",
+        		//e.fullyQualifiedName.toString("/") + ".java",
+        		"file.scala",
         		e.compile)
     	}
 	}
 
-	def compile(Entity e) '''
+	def compile(Scaltex s) '''
 		/* Auto generated java file */
 		
 		// you've written this:
 		/*
-		«e.text.toString()»
+		«s.entities»
 		*/
-		«FOR f : e.text»
-			"«f»"
+		«FOR i : s.entities»
+			«i.entity»
 		«ENDFOR»
 	'''
 
