@@ -6,15 +6,13 @@ package de.htwg.scaltex.dsl.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
-import com.google.inject.Inject
-import org.eclipse.xtext.naming.IQualifiedNameProvider
 import de.htwg.scaltex.dsl.scalTeX.Heading
 import de.htwg.scaltex.dsl.scalTeX.Scaltex
 import de.htwg.scaltex.dsl.scalTeX.UniversalEntity
+import de.htwg.scaltex.dsl.scalTeX.Kwargs
+import de.htwg.scaltex.dsl.scalTeX.UniversalEntityWithKwargs
 
 class ScalTeXGenerator implements IGenerator {
-	
-	@Inject extension IQualifiedNameProvider
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		for(e: resource.allContents.toIterable.filter(typeof(Scaltex))) {
@@ -25,16 +23,39 @@ class ScalTeXGenerator implements IGenerator {
 	}
 
 	def compile(Scaltex s) '''
-		«FOR e : s.entities»
-			«IF e instanceof Heading»
-				«val Heading h = e as Heading»
-				«h.content»
-			«ENDIF»
-			«IF e instanceof UniversalEntity»
-				«val UniversalEntity u = e as UniversalEntity»
-				«u.name»
-			«ENDIF»
-		«ENDFOR»
+	import scala.language.postfixOps
+
+	import scaltex.api._
+	import scaltex.template.FraunhoferArticle
+
+	object Main {
+	«FOR e : s.entities»
+		«IF e instanceof Heading»
+			«val Heading h = e as Heading»
+			§ «h.order» "«h.content.join»"
+		«ENDIF»
+		«IF e instanceof UniversalEntity»
+			«val UniversalEntity u = e as UniversalEntity»
+			^ «u.name» """
+				«u.content»
+			"""
+		«ENDIF»
+		«IF e instanceof UniversalEntityWithKwargs»
+			«val UniversalEntityWithKwargs u = e as UniversalEntityWithKwargs»
+			^ «u.name» (
+				«FOR a : u.content.arguments»
+					«a.name» = "«a.content»" «a.comma»
+				«ENDFOR»
+			)
+		«ENDIF»
+	«ENDFOR»
+
+		def main(args: Array[String]) {
+			(new FraunhoferArticle).write("_output/output.html")
+			println("You can now `open _output/output.html`")
+		}
+
+	}
 	'''
 
 }

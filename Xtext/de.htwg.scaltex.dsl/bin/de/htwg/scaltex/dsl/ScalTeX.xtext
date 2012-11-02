@@ -8,21 +8,33 @@ Scaltex:
 ;
 
 Entity:
-	Heading | UniversalEntity | ControlCommand
+	Heading | UniversalEntity | UniversalEntityWithKwargs | ControlCommand
 ;
 
 Heading:
-	'§' ('>' | '>>' | '>>>') content += STRING
+	'§' order = ('>' | '>>' | '>>>') content += STRING
 ;
 
 UniversalEntity:
 	'^' name = ID
-		content += STRING
+		content = STRING
+;
+
+UniversalEntityWithKwargs:
+	'^' name = ID
+		content = Kwargs
 ;
 
 ControlCommand:
 	'!!' content = ID
 ;
 
-terminal MULTILINESTRING: 
-  '"""' ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'"""') )* '"""' ;
+Kwargs:
+	'('
+		(arguments += Argument)*
+	')'
+;
+
+Argument:
+	name = ID '=' content = STRING (comma = ',')?
+;
