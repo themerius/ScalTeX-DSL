@@ -6,11 +6,11 @@ package de.htwg.scaltex.dsl.generator
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.generator.IGenerator
 import org.eclipse.xtext.generator.IFileSystemAccess
-import de.htwg.scaltex.dsl.scalTeX.Entity
 import com.google.inject.Inject
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import de.htwg.scaltex.dsl.scalTeX.Heading
 import de.htwg.scaltex.dsl.scalTeX.Scaltex
+import de.htwg.scaltex.dsl.scalTeX.UniversalEntity
 
 class ScalTeXGenerator implements IGenerator {
 	
@@ -19,21 +19,21 @@ class ScalTeXGenerator implements IGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		for(e: resource.allContents.toIterable.filter(typeof(Scaltex))) {
       		fsa.generateFile(
-        		//e.fullyQualifiedName.toString("/") + ".java",
-        		"file.scala",
+        		e.name + ".scala",
         		e.compile)
     	}
 	}
 
 	def compile(Scaltex s) '''
-		/* Auto generated java file */
-		
-		// you've written this:
-		/*
-		«s.entities»
-		*/
-		«FOR i : s.entities»
-			«i.entity»
+		«FOR e : s.entities»
+			«IF e instanceof Heading»
+				«val Heading h = e as Heading»
+				«h.content»
+			«ENDIF»
+			«IF e instanceof UniversalEntity»
+				«val UniversalEntity u = e as UniversalEntity»
+				«u.name»
+			«ENDIF»
 		«ENDFOR»
 	'''
 

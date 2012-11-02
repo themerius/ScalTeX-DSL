@@ -3,24 +3,25 @@ grammar de.htwg.scaltex.dsl.ScalTeX with org.eclipse.xtext.common.Terminals
 generate scalTeX "http://www.htwg.de/scaltex/dsl/ScalTeX"
 
 Scaltex:
+	'filename' name = ID
 	entities += Entity*
 ;
 
 Entity:
-	entity = (Heading | UniversalEntities | ControlCommand)
+	Heading | UniversalEntity | ControlCommand
 ;
 
 Heading:
 	'§' ('>' | '>>' | '>>>') content += STRING
 ;
 
-UniversalEntities:
+UniversalEntity:
 	'^' name = ID
 		content += STRING
 ;
 
 ControlCommand:
-	'!!' name = ID
+	'!!' content = ID
 ;
 
 terminal MULTILINESTRING: 
