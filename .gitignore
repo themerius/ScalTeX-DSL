@@ -8,6 +8,7 @@
 
 # Xtext
 Xtext/.metadata/*
+
 Xtext/de.htwg.scaltex.dsl.tests/src-gen/*
 Xtext/de.htwg.scaltex.dsl.ui/src-gen/*
 Xtext/de.htwg.scaltex.dsl/src-gen/*
@@ -16,6 +17,15 @@ Xtext/de.htwg.scaltex.dsl/bin/*
 Xtext/de.htwg.scaltex.dsl.tests/bin/*
 Xtext/de.htwg.scaltex.dsl.ui/bin/*
 Xtext/de.htwg.scaltex.dsl/xtend-gen/*
+
+Xtext/de.htwg.scaltex.latexdsl.tests/src-gen/*
+Xtext/de.htwg.scaltex.latexdsl.ui/src-gen/*
+Xtext/de.htwg.scaltex.latexdsl/src-gen/*
+Xtext/de.htwg.scaltex.latexdsl.tests/xtend-gen/*
+Xtext/de.htwg.scaltex.latexdsl/bin/*
+Xtext/de.htwg.scaltex.latexdsl.tests/bin/*
+Xtext/de.htwg.scaltex.latexdsl.ui/bin/*
+Xtext/de.htwg.scaltex.latexdsl/xtend-gen/*
 
 runtime-EclipseXtext/*
 

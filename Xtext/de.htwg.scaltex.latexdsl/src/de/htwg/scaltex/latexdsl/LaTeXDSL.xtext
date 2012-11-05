@@ -1,0 +1,20 @@
+grammar de.htwg.scaltex.latexdsl.LaTeXDSL with org.eclipse.xtext.common.Terminals
+
+generate laTeXDSL "http://www.htwg.de/scaltex/latexdsl/LaTeXDSL"
+
+Model:
+	entities += Entity*;
+
+Entity:
+	Section | Paragraph
+;
+
+Section:
+	'\\section' '{' content = TEXT '}';
+
+Paragraph:
+	content = TEXT
+;
+
+terminal TEXT  : 
+  ( '\\'('b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\') | !('\\'|'{'|'}'|'\n') )*;

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<plugin>
+
+  <extension point="org.eclipse.emf.ecore.generated_package">
+    <package 
+       uri = "http://www.htwg.de/scaltex/latexdsl/LaTeXDSL" 
+       class = "de.htwg.scaltex.latexdsl.laTeXDSL.LaTeXDSLPackage"
+       genModel = "de/htwg/scaltex/latexdsl/LaTeXDSL.genmodel" /> 
+	
+  </extension>
+
+
+
+
+</plugin>
