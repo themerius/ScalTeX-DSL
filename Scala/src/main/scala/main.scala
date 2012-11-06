@@ -9,19 +9,18 @@ object Main {
 
   § >> "Unterüberschrift"
 
-  ^ txt """
+  ++ txt """
     Lorem ipsum Abb. ${fig.number} dolor sit amet, consetetur sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
   """
 
   val text_1 =
-  ^ txtref (() => s"""
+  ++ txtref (() => s"""
     Lorem ipsum Abb. ${fig.number} dolor sit amet, consetetur sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
-  """
-  )
+  """)
 
   § > "Beispiel"
 
@@ -31,14 +30,14 @@ object Main {
 
   § >>> "Überschrift 3. Ordnung"
 
-  ^ txt """
+  ++ txt """
     <em>Lorem ipsum</em> dolor sit amet, consetetur sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
   """
 
   val fig =
-  ^ figure(
+  ++ figure(
     src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
     desc="Matplotlib example histogramm"
   )
