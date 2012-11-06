@@ -1,9 +1,17 @@
+package scaltex.main
+
 import scala.language.postfixOps
+import language.dynamics
+import scala.collection.mutable.HashMap
 
 import scaltex.api._
 import scaltex.template.FraunhoferArticle
 
-object Main {
+object Main extends Dynamic {
+
+  private val map = new HashMap[String, Any]
+  def selectDynamic(name: String): Any = {return map(name)}
+  def updateDynamic(name:String)(value: Any) = {map(name) = value}
 
   § > "Überschrift"
 
@@ -17,7 +25,7 @@ object Main {
 
   val text_1 =
   ++ txtref (() => s"""
-    Lorem ipsum Abb. ${fig.number} dolor sit amet, consetetur sadipscing elitr, sed diam
+    Lorem ipsum Abb. ${Main.figname.asInstanceOf[scaltex.logic.Figure].number} dolor sit amet, consetetur sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
   """)
@@ -36,10 +44,10 @@ object Main {
     sed diam voluptua.
   """
 
-  val fig =
   ++ figure(
     src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
-    desc="Matplotlib example histogramm"
+    desc="Matplotlib example histogramm",
+    name="figname"
   )
 
   def main(args: Array[String]) {

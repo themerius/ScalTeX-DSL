@@ -13,7 +13,11 @@ object ++ {
   def txt (input: String) = new logic.Text(input)
   def txtref (input: () => String) = new logic.TextWithRef(input)
   def html (input: scala.xml.Elem) = println(input)
-  def figure (src: String, desc: String) = new logic.Figure(src, desc)
+  def figure (src: String, desc: String, name: String) = {
+    val ret = new logic.Figure(src, desc)
+    scaltex.main.Main.updateDynamic(name)(ret)
+    ret
+  }
   def table (input: List[Any]*) = {
     for (item <- input)
       println(item)
