@@ -1,5 +1,6 @@
 package scaltex.util
 
+// Dynamic Object
 // Source: http://stackoverflow.com/questions/13253557/
 
 import language.dynamics
@@ -45,3 +46,14 @@ class DynamicObject extends DynamicBase {
     map(name) = dyn
   }
 }
+
+
+// String Parser
+
+class StringExtractor (s: String) {
+  val regex = "\\[(.*?)\\]".r
+  def extract: List[String] = regex.findAllIn(s).toList.map(
+    _.split("\\]")(0).split("\\[")(1)
+  )
+}
+

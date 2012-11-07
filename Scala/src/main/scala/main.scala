@@ -49,6 +49,14 @@ object Main extends DynamicObject {
     // config
     text_1 newline = true :: true :: Nil  // this needs postfixOps
 
+    import scala.tools.reflect.ToolBox
+    import scala.reflect.runtime.{currentMirror => m}
+    val tb = m.mkToolBox()
+    val tree = tb.parse("import scaltex.main.Main; Main.figname.number")
+    val res = tb.eval(tree)
+    println(res)
+
+
     // write output file
     (new FraunhoferArticle).write("_output/output.html")
     println("You can now `open _output/output.html`")
