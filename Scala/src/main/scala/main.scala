@@ -19,11 +19,11 @@ object Main extends DynamicObject {
   """
 
   val text_1 =
-  ++ txtref (() => s"""
-    Lorem ipsum Abb. ${Main.figname.number} dolor sit amet, consetetur sadipscing elitr, sed diam
+  ++ txtref """
+    Lorem ipsum Abb. [scaltex.main.Main.figname.number] dolor sit amet, consetetur sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
-  """)
+  """
 
   § > "Beispiel"
 

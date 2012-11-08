@@ -74,10 +74,11 @@ class Text (txt: String) extends Entity {
   ).toString
 }
 
-class TextWithRef (txt: () => String) extends Entity {
+class TextWithRef (txt: String) extends Entity {
 
   Tray.add(this)
   var newline: List[Boolean] = List()
+  val text = new scaltex.util.StringExtractor(this.txt)
 
   def json = Json.toJson(
     Map(
@@ -85,7 +86,7 @@ class TextWithRef (txt: () => String) extends Entity {
       "json" -> Json.toJson(
         Map(
           "id" -> Json.toJson(this.id),
-          "text" -> Json.toJson(this.txt()),
+          "text" -> Json.toJson(this.text.replace),
           "newline" -> Json.toJson(this.newline)
         )
       )

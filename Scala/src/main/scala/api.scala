@@ -11,7 +11,7 @@ object § {
 
 object ++ {
   def txt (input: String) = new logic.Text(input)
-  def txtref (input: () => String) = new logic.TextWithRef(input)
+  def txtref (input: String) = new logic.TextWithRef(input)
   def html (input: scala.xml.Elem) = println(input)
   def figure (src: String, desc: String, name: String) = {
     val ret = new logic.Figure(src, desc)

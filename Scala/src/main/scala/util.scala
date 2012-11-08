@@ -50,10 +50,24 @@ class DynamicObject extends DynamicBase {
 
 // String Parser
 
+import scala.tools.reflect.ToolBox
+import scala.reflect.runtime.{currentMirror => m}
+
 class StringExtractor (s: String) {
   val regex = "\\[(.*?)\\]".r
-  def extract: List[String] = regex.findAllIn(s).toList.map(
-    _.split("\\]")(0).split("\\[")(1)
-  )
+  def extract: List[String] = regex.findAllIn(s).toList
+  def stringsForEval: List[String] = extract.map(_.split("\\]")(0).split("\\[")(1))
+  def resolve: List[String] = {
+    val tb = m.mkToolBox()
+    stringsForEval.map(x => tb.parse(x)).map(x => tb.eval(x)).map(_.toString)
+  }
+  def replace: String = {
+    val zip = extract.zip(resolve)
+    var res = s
+    for (item <- zip) {
+      res = res.replace(item._1, item._2)
+    }
+    res
+  }
 }
 
