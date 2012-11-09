@@ -12,6 +12,6 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.specs2" %% "specs2" % "1.11" % "test",
+  "org.scalatest" % "scalatest_2.10.0-RC2" % "1.8-B2",
   "play" %% "play" % "2.1-SNAPSHOT"
 )
