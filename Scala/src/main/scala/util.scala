@@ -45,3 +45,19 @@ class DynamicObject extends DynamicBase {
     map(name) = dyn
   }
 }
+
+
+// StringContext for $""
+
+import scala.language.implicitConversions
+
+object $StringContext {
+  implicit def byname_to_noarg[A](a: => A) = () => a
+
+  case class StringContext(parts: String*) {
+    def $ (args: (() => Any)*) = () => {
+      val unpacked = args.map(a => a())
+      scala.StringContext(parts: _*).s(unpacked: _*)
+    }
+  }
+}

@@ -3,6 +3,7 @@ package scaltex.main
 import scala.language.postfixOps
 
 import scaltex.util._
+import scaltex.util.$StringContext._
 import scaltex.api._
 import scaltex.template.FraunhoferArticle
 
@@ -19,11 +20,11 @@ object Main extends DynamicObject {
   """
 
   val text_1 =
-  ++ txtref (() => s"""
+  ++ txtref $"""
     Lorem ipsum Abb. ${Main.figname.number} dolor sit amet, consetetur sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
-  """)
+  """
 
   § > "Beispiel"
 
@@ -43,6 +44,18 @@ object Main extends DynamicObject {
     src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
     desc="Matplotlib example histogramm",
     name="figname"
+  )
+
+  ++ txtref $"""
+    Lorem ipsum Abb. ${Main.otherfig.number} dolor sit amet, consetetur sadipscing elitr, sed diam
+    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+    sed diam voluptua.
+  """
+
+  ++ figure(
+    src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
+    desc="Matplotlib example histogramm",
+    name="otherfig"
   )
 
   def main(args: Array[String]) {
