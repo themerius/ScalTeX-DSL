@@ -15,7 +15,7 @@ object ++ {
   def html (input: scala.xml.Elem) = println(input)
   def figure (src: String, desc: String, name: String) = {
     val ret = new logic.Figure(src, desc)
-    scaltex.main.Main.updateDynamic(name)(ret)
+    scaltex.main.Chapter_1.updateDynamic(name)(ret)
     ret
   }
   def table (input: List[Any]*) = {

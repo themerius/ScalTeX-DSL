@@ -7,21 +7,34 @@ import scaltex.util.$StringContext._
 import scaltex.api._
 import scaltex.template.FraunhoferArticle
 
-object Main extends DynamicObject {
+object Main {
+
+  Chapter_1
+  Chapter_2
+
+  def main(args: Array[String]) {
+    // write output file
+    (new FraunhoferArticle).write("_output/output.html")
+    println("You can now `open _output/output.html`")
+  }
+}
+
+object Chapter_1 extends DynamicObject {
 
   § > "Überschrift"
 
   § >> "Unterüberschrift"
 
   ++ txt """
-    Lorem ipsum Abb. ${fig.number} dolor sit amet, consetetur sadipscing elitr, sed diam
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
   """
 
   val text_1 =
   ++ txtref $"""
-    Lorem ipsum Abb. ${Main.figname.number} dolor sit amet, consetetur sadipscing elitr, sed diam
+    Lorem ipsum Abb. ${Chapter_1.figname.number} dolor sit amet, consetetur
+    sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
   """
@@ -47,7 +60,8 @@ object Main extends DynamicObject {
   )
 
   ++ txtref $"""
-    Lorem ipsum Abb. ${Main.otherfig.number} dolor sit amet, consetetur sadipscing elitr, sed diam
+    Lorem ipsum Abb. ${Chapter_1.otherfig.number} dolor sit amet, consetetur
+    sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
   """
@@ -58,12 +72,16 @@ object Main extends DynamicObject {
     name="otherfig"
   )
 
-  def main(args: Array[String]) {
-    // config
-    text_1 newline = true :: true :: Nil  // this needs postfixOps
+  // config
+  text_1 newline = true :: true :: Nil  // this needs postfixOps
 
-    // write output file
-    (new FraunhoferArticle).write("_output/output.html")
-    println("You can now `open _output/output.html`")
-  }
+}
+
+object Chapter_2 {
+  § > "Other"
+
+  ++ txtref $"""
+    Paragraph within Other.
+    Reference on Fig ${Chapter_1.figname.number} in Chapter 1.
+  """
 }
