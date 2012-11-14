@@ -1,4 +1,4 @@
-grammar de.htwg.scaltex.dsl.ScalTeX with org.eclipse.xtext.common.Terminals
+grammar de.htwg.scaltex.dsl.ScalTeX with org.eclipse.xtext.xbase.Xbase
 
 generate scalTeX "http://www.htwg.de/scaltex/dsl/ScalTeX"
 
@@ -8,7 +8,7 @@ Scaltex:
 ;
 
 Entity:
-	Heading | UniversalEntity | UniversalEntityWithKwargs | ControlCommand
+	Heading | UniversalEntity | UniversalEntityWithKwargs | ControlCommand | Operation
 ;
 
 Heading:
@@ -37,4 +37,8 @@ Kwargs:
 
 Argument:
 	name = ID '=' content = STRING (comma = ',')?
+;
+
+Operation:
+  body=XBlockExpression
 ;
