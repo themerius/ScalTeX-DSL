@@ -82,6 +82,23 @@ class Figure (src: String, desc: String) extends Entity {
   def getNumber: String = Tray.tray.filter(_.isInstanceOf[Figure]).length.toString
 }
 
+class Python (script: String) {
+  import java.io.{OutputStreamWriter, FileOutputStream}
+  import scala.sys.process._
+  def createFile: String = {
+    val filename = java.security.MessageDigest.getInstance("MD5").digest(script.getBytes)
+    val filepath = "_output/py" + filename.mkString("") + ".py"
+
+    val file = new OutputStreamWriter(
+      new FileOutputStream(filepath), "UTF-8")
+    file.append(script)
+    file.close
+
+    return filepath
+  }
+  def exec: String = ("python " + createFile).!!
+}
+
 object Tray {
   val tray = ListBuffer.empty[Entity]
   def add(e: Entity) = tray += e

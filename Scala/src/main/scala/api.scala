@@ -13,9 +13,8 @@ trait § {
 trait ++ {
   def txt (input: String)
   def html (input: scala.xml.Elem) = println(input)
-  def figure
-  (src: String, desc: String, name: String)
-  (implicit objectRef: DynamicObject) = {
+  def figure (src: String, desc: String, name: String)
+    (implicit objectRef: DynamicObject) = {
     val ret = new logic.Figure(src, desc)
     objectRef.updateDynamic(name)(ret)
     ret
