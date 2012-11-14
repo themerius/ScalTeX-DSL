@@ -36,6 +36,7 @@ object Chapter_1 extends DynamicObject {
     sed diam voluptua.
   """
 
+
   § > "Beispiel"
 
   § >> "Konkretes Beispiel"
@@ -57,25 +58,24 @@ object Chapter_1 extends DynamicObject {
   )
 
   ++ txt $"""
-    Lorem ipsum Abb. ${Chapter_1.otherfig.number} dolor sit amet, consetetur
+    Lorem ipsum Abb. ${Chapter_2.otherfig.number} dolor sit amet, consetetur
     sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
   """
+
+  // config
+  text_1.newline = true :: true :: Nil
+}
+
+object Chapter_2 extends DynamicObject {
+  § > "Other"
 
   ++ figure(
     src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
     desc="Matplotlib example histogramm",
     name="otherfig"
   )
-
-  // config
-  text_1.newline = true :: true :: Nil  // this needs postfixOps
-
-}
-
-object Chapter_2 {
-  § > "Other"
 
   ++ txt $"""
     Paragraph within Other.

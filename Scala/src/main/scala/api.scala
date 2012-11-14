@@ -2,6 +2,7 @@ package scaltex.api
 
 import scala.language.implicitConversions
 import scaltex.logic
+import scaltex.util.DynamicObject
 
 trait § {
   def > (input: String) = new logic.Heading(input, "h1")
@@ -12,9 +13,11 @@ trait § {
 trait ++ {
   def txt (input: String)
   def html (input: scala.xml.Elem) = println(input)
-  def figure (src: String, desc: String, name: String) = {
+  def figure
+  (src: String, desc: String, name: String)
+  (implicit objectRef: DynamicObject) = {
     val ret = new logic.Figure(src, desc)
-    scaltex.main.Chapter_1.updateDynamic(name)(ret)
+    objectRef.updateDynamic(name)(ret)
     ret
   }
   def table (input: List[Any]*) = {

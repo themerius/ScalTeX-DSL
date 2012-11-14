@@ -44,6 +44,7 @@ class DynamicObject extends DynamicBase {
     }
     map(name) = dyn
   }
+  implicit val objectRef = this
 }
 
 
