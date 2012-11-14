@@ -3,15 +3,14 @@ package scaltex.api
 import scala.language.implicitConversions
 import scaltex.logic
 
-object § {
+trait § {
   def > (input: String) = new logic.Heading(input, "h1")
   def >> (input: String) = new logic.Heading(input, "h2")
   def >>> (input: String) = new logic.Heading(input, "h3")
 }
 
-object ++ {
-  def txt (input: String) = new logic.Text(input)
-  def txtref (input: () => String) = new logic.TextWithRef(input)
+trait ++ {
+  def txt (input: String)
   def html (input: scala.xml.Elem) = println(input)
   def figure (src: String, desc: String, name: String) = {
     val ret = new logic.Figure(src, desc)

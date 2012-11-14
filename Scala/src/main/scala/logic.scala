@@ -55,42 +55,9 @@ case class Heading (heading: String, h: String = "h1") extends Entity {
   }
 }
 
-class Text (txt: String) extends Entity {
-
+abstract class Text(txt: () => String) extends Entity {
   Tray.add(this)
   var newline: List[Boolean] = List()
-
-  def json = Json.toJson(
-    Map(
-      "templateId" -> Json.toJson("text_1110"),
-      "json" -> Json.toJson(
-        Map(
-          "id" -> Json.toJson(this.id),
-          "text" -> Json.toJson(this.txt),
-          "newline" -> Json.toJson(this.newline)
-        )
-      )
-    )
-  ).toString
-}
-
-class TextWithRef (txt: () => String) extends Entity {
-
-  Tray.add(this)
-  var newline: List[Boolean] = List()
-
-  def json = Json.toJson(
-    Map(
-      "templateId" -> Json.toJson("text_1110"),
-      "json" -> Json.toJson(
-        Map(
-          "id" -> Json.toJson(this.id),
-          "text" -> Json.toJson(this.txt()),
-          "newline" -> Json.toJson(this.newline)
-        )
-      )
-    )
-  ).toString
 }
 
 class Figure (src: String, desc: String) extends Entity {
@@ -123,4 +90,11 @@ object Tray {
 
 class Tray {
   def entities = Tray.get
+
+  def unpack = {
+    var ret = ""
+    for (entity <- entities)
+      ret += entity.json + ","
+    ret
+  }
 }

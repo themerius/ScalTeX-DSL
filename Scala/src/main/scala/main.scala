@@ -1,11 +1,8 @@
 package scaltex.main
 
-import scala.language.postfixOps
-
 import scaltex.util._
 import scaltex.util.$StringContext._
-import scaltex.api._
-import scaltex.template.FraunhoferArticle
+import scaltex.template._
 
 object Main {
 
@@ -32,7 +29,7 @@ object Chapter_1 extends DynamicObject {
   """
 
   val text_1 =
-  ++ txtref $"""
+  ++ txt $"""
     Lorem ipsum Abb. ${Chapter_1.figname.number} dolor sit amet, consetetur
     sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
@@ -59,7 +56,7 @@ object Chapter_1 extends DynamicObject {
     name="figname"
   )
 
-  ++ txtref $"""
+  ++ txt $"""
     Lorem ipsum Abb. ${Chapter_1.otherfig.number} dolor sit amet, consetetur
     sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
@@ -73,14 +70,14 @@ object Chapter_1 extends DynamicObject {
   )
 
   // config
-  text_1 newline = true :: true :: Nil  // this needs postfixOps
+  text_1.newline = true :: true :: Nil  // this needs postfixOps
 
 }
 
 object Chapter_2 {
   § > "Other"
 
-  ++ txtref $"""
+  ++ txt $"""
     Paragraph within Other.
     Reference on Fig ${Chapter_1.figname.number} in Chapter 1.
   """

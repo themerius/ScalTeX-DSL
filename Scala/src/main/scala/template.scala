@@ -1,5 +1,6 @@
 package scaltex.template
 
+import play.api.libs.json._
 import java.io.{OutputStreamWriter, FileOutputStream}
 
 class FraunhoferArticle extends scaltex.logic.Tray {
@@ -174,18 +175,33 @@ MathJax.Hub.Config({
 </html>
 """
 
-  def unpack = {
-    var ret = ""
-    for (entity <- entities)
-      ret += entity.json + ","
-    ret
-  }
-
   def write (filePath: String) = {
     val out = new OutputStreamWriter(
       new FileOutputStream(filePath), "UTF-8")
     out.append(this.htmlHead + this.htmlTemplates + this.htmlMainScript(this.unpack) + this.htmlFoot)
     out.close
   }
-
 }
+
+class Text(txt: () => String) extends scaltex.logic.Text(txt) {
+  def this (txt: String) = this(() => txt)
+  def json = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson("text_1110"),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(id),
+          "text" -> Json.toJson(txt()),
+          "newline" -> Json.toJson(newline)
+        )
+      )
+    )
+  ).toString
+}
+
+object ++ extends scaltex.api.++ {
+  def txt(s: String) = new Text(s)
+  def txt(s: () => String) = new Text(s)
+}
+
+object § extends scaltex.api.§
