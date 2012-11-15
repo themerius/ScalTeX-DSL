@@ -2,6 +2,7 @@ package scaltex.template
 
 import play.api.libs.json._
 import java.io.{OutputStreamWriter, FileOutputStream}
+import scaltex.util.DynamicObject
 
 class FraunhoferArticle extends scaltex.logic.Tray {
   def htmlHead = """<!DOCTYPE html>
@@ -199,9 +200,31 @@ class Text(txt: () => String) extends scaltex.logic.Text(txt) {
   ).toString
 }
 
+class Figure (src: String, desc: String) extends scaltex.logic.Figure(src) {
+  def json = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson("figure_1100"),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(this.id),
+          "src" -> Json.toJson(this.src),
+          "description" -> Json.toJson(this.desc),
+          "number" -> Json.toJson(this.number)
+        )
+      )
+    )
+  ).toString
+}
+
 object ++ extends scaltex.api.++ {
   def txt(s: String) = new Text(s)
   def txt(s: () => String) = new Text(s)
+  override def figure (src: String, desc: String, name: String)
+    (implicit objectRef: DynamicObject) = {
+    val ret = new Figure(src, desc)
+    objectRef.updateDynamic(name)(ret)
+    ret  // TODO: eleminate warning
+  }
 }
 
 object § extends scaltex.api.§

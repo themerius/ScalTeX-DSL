@@ -57,28 +57,13 @@ case class Heading (heading: String, h: String = "h1") extends Entity {
 
 abstract class Text(txt: () => String) extends Entity {
   Tray.add(this)
+  val count = Tray.tray.filter( _.isInstanceOf[Text]).length
   var newline: List[Boolean] = List()
 }
 
-class Figure (src: String, desc: String) extends Entity {
-
+abstract class Figure (src: String) extends Entity {
   Tray.add(this)
   val number = getNumber
-
-  def json = Json.toJson(
-    Map(
-      "templateId" -> Json.toJson("figure_1100"),
-      "json" -> Json.toJson(
-        Map(
-          "id" -> Json.toJson(this.id),
-          "src" -> Json.toJson(this.src),
-          "description" -> Json.toJson(this.desc),
-          "number" -> Json.toJson(this.number)
-        )
-      )
-    )
-  ).toString
-
   def getNumber: String = Tray.tray.filter(_.isInstanceOf[Figure]).length.toString
 }
 

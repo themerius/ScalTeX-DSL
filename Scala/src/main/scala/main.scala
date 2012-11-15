@@ -8,7 +8,7 @@ object Main {
 
   Chapter_1
   Chapter_2
-  Chapter_Py
+  //Chapter_Py
 
   def main(args: Array[String]) {
     // write output file
@@ -84,6 +84,9 @@ object Chapter_2 extends DynamicObject {
   """
 }
 
+
+// only if python with matplotlib and numpy is available
+/* 
 object Chapter_Py extends DynamicObject {
   val sc = """
 import base64
@@ -121,3 +124,4 @@ with open("_output/plot.png", "rb") as img:
     name="mplfig"
   )
 }
+*/
