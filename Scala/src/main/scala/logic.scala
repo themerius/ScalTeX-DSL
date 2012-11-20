@@ -84,6 +84,15 @@ class Python (script: String) {
   def exec: String = ("python " + createFile).!!
 }
 
+abstract class TableOfContents extends Entity {
+  Tray.add(this)
+  def generate = {
+    val headings = Tray.get.filter(_.isInstanceOf[Heading]).asInstanceOf[List[Heading]]
+    for (heading <- headings)
+      yield "" + heading.number + " " + heading.heading + "<br />"
+  }
+}
+
 object Tray {
   val tray = ListBuffer.empty[Entity]
   def add(e: Entity) = tray += e

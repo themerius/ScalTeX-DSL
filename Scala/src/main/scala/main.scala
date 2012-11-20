@@ -6,6 +6,8 @@ import scaltex.template._
 
 object Main {
 
+  new TableOfContents
+
   Chapter_1
   Chapter_2
   //Chapter_Py
@@ -86,7 +88,7 @@ object Chapter_2 extends DynamicObject {
 
 
 // only if python with matplotlib and numpy is available
-/* 
+/*
 object Chapter_Py extends DynamicObject {
   val sc = """
 import base64

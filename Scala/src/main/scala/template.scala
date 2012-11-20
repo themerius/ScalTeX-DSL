@@ -216,6 +216,20 @@ class Figure (src: String, desc: String) extends scaltex.logic.Figure(src) {
   ).toString
 }
 
+class TableOfContents extends scaltex.logic.TableOfContents {
+  def json = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson("text_1110"),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(id),
+          "text" -> Json.toJson(generate)
+        )
+      )
+    )
+  ).toString
+}
+
 object ++ extends scaltex.api.++ {
   def txt(s: String) = new Text(s)
   def txt(s: () => String) = new Text(s)
