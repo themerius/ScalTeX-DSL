@@ -14,6 +14,7 @@ class FraunhoferArticle extends scaltex.logic.Tray {
 <link rel="stylesheet" href="http://scaltex.4pple.de/academic_article_fraunhofer/css/typo.css" />
 <link rel="stylesheet" href="http://scaltex.4pple.de/academic_article_fraunhofer/css/grid.css" />
 <link rel="stylesheet" href="http://scaltex.4pple.de/academic_article_fraunhofer/css/titlepage.css" />
+<link rel="stylesheet" href="http://scaltex.4pple.de/academic_article_fraunhofer/css/toc.css" />
 <script src="https://raw.github.com/janl/mustache.js/master/mustache.js"></script>
 <script src="https://raw.github.com/themerius/ScalTeX-templates/master/scaltex/src/scaltex.js"></script>
 <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
@@ -21,6 +22,7 @@ class FraunhoferArticle extends scaltex.logic.Tray {
 <body>
 
 <div id="TitlepageAreal"></div>
+<div id="TableOfContentsAreal"></div>
 <div id="DocumentAreal"></div>
 """
 
@@ -68,6 +70,37 @@ class FraunhoferArticle extends scaltex.logic.Tray {
 </div>
 </script>
 
+
+<script id="toc_heading" type="text/template">
+<div class="row tocHeading">
+  <div class="col4"><h1>{{heading}}</h1></div>
+  <div class="row-end">&nbsp;</div>
+</div>
+</script>
+
+<script id="toc_mainSection" type="text/template">
+<div class="row tocMainSection">
+  <div class="col3 tocLine">
+    <span class="tocTitle tocFloatingDots">{{nr}}</br>{{title}} . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . . . . . . . </span>
+    <span class="tocNumbering"></br>&nbsp;{{page}}</span>
+  </div>
+  <div class="row-end">&nbsp;</div>
+</div>
+</script>
+
+<script id="toc_section" type="text/template">
+<div class="row">
+  <div class="col3 tocLine">
+    <span class="tocTitle tocFloatingDots">{{nr}}</br>{{title}} . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+      . . . . . . . . . . . . . . . . . . . . . . . . . . . </span>
+    <span class="tocNumbering"></br>&nbsp;{{page}}</span>
+  </div>
+  <div class="row-end">&nbsp;</div>
+</div>
+</script>
 
 
 <script id="page" type="text/template">
@@ -122,13 +155,22 @@ class FraunhoferArticle extends scaltex.logic.Tray {
 </script>
 """
 
-  def htmlMainScript(entities: String) = s"""
+  def htmlMainScript(entities: String, tocEntities: String) = s"""
 <script>
 var seq = [
   {
     pageType: "A4",
     entities: [
       $entities
+    ]
+  }
+];
+
+var toc_seq = [
+  {
+    pageType: "A4",
+    entities: [
+      $tocEntities
     ]
   }
 ];
@@ -158,9 +200,17 @@ documentAreal.generateEntities();
 documentAreal.renderEntities();
 documentAreal.mountEntitiesToConstructionArea();
 
+var tocAreal = new scaltex.Areal("TableOfContentsAreal", toc_seq, pageFactory);
+tocAreal.generateEntities();
+tocAreal.renderEntities();
+tocAreal.mountEntitiesToConstructionArea();
+
 window.onload = function () {
   documentAreal.moveEntitiesToNewPages();
   documentAreal.destructConstructionAreas();
+
+  tocAreal.moveEntitiesToNewPages();
+  tocAreal.destructConstructionAreas();
 };
 
 
@@ -179,7 +229,8 @@ MathJax.Hub.Config({
   def write (filePath: String) = {
     val out = new OutputStreamWriter(
       new FileOutputStream(filePath), "UTF-8")
-    out.append(this.htmlHead + this.htmlTemplates + this.htmlMainScript(this.unpack) + this.htmlFoot)
+    val toc = new TableOfContents
+    out.append(this.htmlHead + this.htmlTemplates + this.htmlMainScript(this.unpack, toc.unpack) + this.htmlFoot)
     out.close
   }
 }
@@ -217,17 +268,68 @@ class Figure (src: String, desc: String) extends scaltex.logic.Figure(src) {
 }
 
 class TableOfContents extends scaltex.logic.TableOfContents {
-  def json = Json.toJson(
+  var id = 10000
+
+  def jsonHeading = {
+    id += 1
+    Json.toJson(
     Map(
-      "templateId" -> Json.toJson("text_1110"),
+      "templateId" -> Json.toJson("toc_heading"),
       "json" -> Json.toJson(
         Map(
           "id" -> Json.toJson(id),
-          "text" -> Json.toJson(generate)
+          "heading" -> Json.toJson("Inhalt")
         )
       )
     )
   ).toString
+  }
+
+  def jsonMainSection(h: scaltex.logic.Heading) = {
+    id += 1
+    Json.toJson(
+    Map(
+      "templateId" -> Json.toJson("toc_mainSection"),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(id),
+          "nr" -> Json.toJson(h.number),
+          "title" -> Json.toJson(h.heading),
+          "page" -> Json.toJson(0)
+        )
+      )
+    )
+  ).toString
+  }
+
+  def jsonSection(h: scaltex.logic.Heading) = {
+    id += 1
+    Json.toJson(
+    Map(
+      "templateId" -> Json.toJson("toc_section"),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(id),
+          "nr" -> Json.toJson(h.number),
+          "title" -> Json.toJson(h.heading),
+          "page" -> Json.toJson(0)
+        )
+      )
+    )
+  ).toString
+  }
+
+  def unpack = {
+    var ret = ""
+    ret += jsonHeading + ","
+    for (heading <- generate) {
+      if (heading.h == "h1")
+        ret += jsonMainSection(heading) + ","
+      else
+        ret += jsonSection(heading) + ","
+    }
+    ret
+  }
 }
 
 object ++ extends scaltex.api.++ {

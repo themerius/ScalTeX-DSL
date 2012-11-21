@@ -6,8 +6,6 @@ import scaltex.template._
 
 object Main {
 
-  new TableOfContents
-
   Chapter_1
   Chapter_2
   //Chapter_Py

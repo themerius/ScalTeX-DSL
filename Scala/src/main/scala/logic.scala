@@ -84,13 +84,8 @@ class Python (script: String) {
   def exec: String = ("python " + createFile).!!
 }
 
-abstract class TableOfContents extends Entity {
-  Tray.add(this)
-  def generate = {
-    val headings = Tray.get.filter(_.isInstanceOf[Heading]).asInstanceOf[List[Heading]]
-    for (heading <- headings)
-      yield "" + heading.number + " " + heading.heading + "<br />"
-  }
+abstract class TableOfContents {
+  def generate = Tray.get.filter(_.isInstanceOf[Heading]).asInstanceOf[List[Heading]]
 }
 
 object Tray {
