@@ -2,7 +2,7 @@ name := "DSL Ideas for ScalTeX"
 
 version := "0.1"
 
-scalaVersion := "2.10.0-RC2"
+scalaVersion := "2.10.0-RC3"
 
 resolvers ++= Seq(
   "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
@@ -12,6 +12,6 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "org.scalatest" % "scalatest_2.10.0-RC2" % "1.8-B2",
+  "org.scalatest" % "scalatest_2.10.0-RC3" % "1.8-B1",
   "play" %% "play" % "2.1-SNAPSHOT"
 )
