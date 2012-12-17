@@ -24,5 +24,7 @@ class ExampleSpec extends FunSpec with BeforeAndAfterEach {
     it("should know it's length") {
       assert(str.length === 11)
     }
+
+    it("should ...") (pending)
   }
 }
