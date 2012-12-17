@@ -1,44 +1,15 @@
 grammar de.htwg.scaltex.dsl.ScalTeX with org.eclipse.xtext.xbase.Xbase
 
 generate scalTeX "http://www.htwg.de/scaltex/dsl/ScalTeX"
+import "http://www.eclipse.org/xtext/xbase/Xbase"
 
-Scaltex:
-	'filename' name = ID
-	entities += Entity*
-;
-
-Entity:
-	Heading | UniversalEntity | UniversalEntityWithKwargs | ControlCommand | Operation
-;
-
-Heading:
-	'§' order = ('>' | '>>' | '>>>') content += STRING
-;
-
-UniversalEntity:
-	'^' name = ID
-		content = STRING
-;
-
-UniversalEntityWithKwargs:
-	'^' name = ID
-		content = Kwargs
-;
-
-ControlCommand:
-	'!!' content = ID
-;
-
-Kwargs:
-	'('
-		(arguments += Argument)*
-	')'
-;
-
-Argument:
-	name = ID '=' content = STRING (comma = ',')?
-;
-
-Operation:
-  body=XBlockExpression
-;
+Script returns XBlockExpression:
+  {Script} 
+  // return an object of type Script which is a subtype of XBlockExpression
+  ((expressions+=XExpressionInsideBlock | imports+=Import) ';'?)*;
+ 
+Import:
+  'import' importedNamespace=QualifiedNameWithWildcard;
+ 
+QualifiedNameWithWildcard:
+  QualifiedName '.*'?;

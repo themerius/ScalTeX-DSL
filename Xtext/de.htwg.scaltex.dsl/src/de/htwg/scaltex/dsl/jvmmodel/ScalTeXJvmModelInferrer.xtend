@@ -4,8 +4,7 @@ import com.google.inject.Inject
 import org.eclipse.xtext.xbase.jvmmodel.AbstractModelInferrer
 import org.eclipse.xtext.xbase.jvmmodel.IJvmDeclaredTypeAcceptor
 import org.eclipse.xtext.xbase.jvmmodel.JvmTypesBuilder
-import de.htwg.scaltex.dsl.scalTeX.Scaltex
-import de.htwg.scaltex.dsl.scalTeX.Operation
+import de.htwg.scaltex.dsl.scalTeX.Script
 
 /**
  * <p>Infers a JVM model from the source model.</p> 
@@ -45,20 +44,20 @@ class ScalTeXJvmModelInferrer extends AbstractModelInferrer {
 	 *            rely on linking using the index if isPreIndexingPhase is
 	 *            <code>true</code>.
 	 */
-   	def dispatch void infer(Scaltex element, IJvmDeclaredTypeAcceptor acceptor, boolean isPreIndexingPhase) {
-   		// Here you explain how your model is mapped to Java elements, by writing the actual translation code.
-   		
-   		// An implementation for the initial hello world example could look like this:
-//   		acceptor.accept(element.toClass("my.company.greeting.MyGreetings"))
-//   			.initializeLater([
-//   				for (greeting : element.greetings) {
-//   					members += greeting.toMethod("hello" + greeting.name, greeting.newTypeRef(typeof(String))) [
-//   						body = [
-//   							append('''return "Hello «greeting.name»";''')
-//   						]
-//   					]
-//   				}
-//   			])
+  def dispatch void infer(Script script, 
+                          IJvmDeclaredTypeAcceptor acceptor, 
+                          boolean isPreIndexingPhase) {
+    val className = script.eResource.URI.trimFileExtension.lastSegment
+    acceptor.accept(script.toClass(className)).initializeLater [
+      // the class gets one main method
+      members += script.toMethod('main', script.newTypeRef('void')) [
+        parameters += script.toParameter('args', 
+            script.newTypeRef('java.lang.String').addArrayTypeDimension)
+        setStatic(true)
+        // Associate the script as the body of the main method
+        body = script
+      ]
+    ]
    	}
 }
 
