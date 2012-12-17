@@ -34,3 +34,8 @@ runtime-EclipseXtext/*
 Scala/project/*
 Scala/target/*
 Scala/_output/*
+
+# Scala
+Scala-NextGen/project/*
+Scala-NextGen/target/*
+Scala-NextGen/_output/*
