@@ -15,19 +15,42 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   // package scaltex.abstracts
 
+
+  describe("A Builder") {
+    // sieht gesamtes dokument
+    // wirft die generatoren jedes areals an.
+
+    it("must have a companion object with a list of related areals, in the right predefined order") (pending)
+
+    it("uses areals, pages and entities to define the basis of an document template (the html around)") (pending)
+
+    it("is able to adjust the configuration of the basis document template (e.g. document name)") (pending)
+
+    it("should have a `build` method for generating the document") (pending)
+
+    it("should have a `write` method to save the document as html") (pending)
+
+    it("should own a implicit reference onto itslef") (pending)
+
+  }
+
   describe("A DocumentClass") {
 
     it("is a abstract type describing a document class") (pending)
 
-    it("defines basis methods which are used by the document class") (pending)
+    it("defines areals which are minimum known to the document class") (pending)
 
-    it("should be inherited to form a document template") (pending)
+    it("defines pages which are minimum known to the document class") (pending)
+
+    it("defines methods which map onto entities, this implies a minimum set for the document class") (pending)
 
   }
 
   describe("A Areal") {
 
-    it("must have a companion object with the list of related entities") (pending)
+    it("must have a companion object with a list of related entities, in the right predefined order") (pending)
+
+    it("calls and uses the generator") (pending)
 
     it("is related to an append point, where pages are appended to") (pending)
 
@@ -40,6 +63,10 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     it("should accept a implicit reference onto a Builder") (pending)
 
     it("should have methods for manipulating the page numbering") (pending)
+
+    it("is able to change the page layout") (pending)
+
+    it("is able to manipulate configuration") (pending)
 
   }
 
@@ -71,6 +98,12 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   }
 
+  describe("The Generator") {
+
+    it("reads the lists with entities and processes them") (pending)
+
+  }
+
   describe("The Entity binding ++") {
 
     it("implements the document-class's methods and binds it to corrosponding entity") (pending)
@@ -80,14 +113,6 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     it("should return the entity") (pending)
 
     it("should be able to register the entities reference as property to the corrosponding areal") (pending)
-
-  }
-
-  describe("The ControlCommand binding !!") {
-
-    it("is able to change the page layout") (pending)
-
-    it("is able to manipulate configuration") (pending)
 
   }
 
