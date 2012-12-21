@@ -24,7 +24,8 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
     it("uses areals, pages and entities to define the basis of an document template (the html around)") (pending)
 
-    it("is able to adjust the configuration of the basis document template (e.g. document name)") (pending)
+    it("is able to adjust the configuration of the basis document template") (pending)
+    // e.g. footer, document name (esp. patent)
 
     it("should have a `build` method for generating the document") (pending)
 
@@ -80,7 +81,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
     it("knows an append point where it will appended to a page") (pending)
 
-    it("should be optional nameable") (pending)
+    it("should be optional nameable via a $ method") (pending)
 
     it("should set it's name as reference to it's assigned object") (pending)
 
