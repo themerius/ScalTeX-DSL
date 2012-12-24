@@ -43,39 +43,17 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   }
 
 
-  describe("A Builder") {
+  describe("A Tray") {
 
-    it("must have a companion object with a list of related areals, in the right predefined order") (pending)
-
-    it("should set the areal append points in the right order") (pending)
-
-    it("should fetch for every areal the JSON of each entity of the areal, to instantiate them in the js") (pending)
-
-    it("should assemble the configuration in js for the page layouts") (pending)
-
-    it("should assemble the configuration in js for the document name") (pending)
-
-    it("should assemble the configuration in js for the special entities like page footer") (pending)
-
-    it("should have a `build` method for generating the document") (pending)
-
-    it("should have a `write` method to save the document as html") (pending)
-
-    it("should own a implicit reference onto itslef") (pending)
+    it("should have a list buffer for type T, for extending companion objects") {
+      object TestTray extends Tray[Int]
+      TestTray.add(1)
+      TestTray.add(2)
+      TestTray.get should be === List(1, 2)
+    }
 
   }
 
-  describe("A DocumentClass") {
-
-    it("is a abstract type describing a document class") (pending)
-
-    it("defines areals which are minimum known to the document class") (pending)
-
-    it("defines pages which are minimum known to the document class") (pending)
-
-    it("defines methods which map onto entities, this implies a minimum set for the document class") (pending)
-
-  }
 
   describe("A Areal") {
 
@@ -100,6 +78,42 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     it("is able to manipulate configuration") (pending)
 
   }
+
+  describe("A Builder") {
+
+    it("must have a companion object with a list of related areals, in the right predefined order") (pending)
+
+    it("should set the areal append points in the right order") (pending)
+
+    it("should fetch for every areal the JSON of each entity of the areal, to instantiate them in the js") (pending)
+
+    it("should assemble the configuration in js for the page layouts") (pending)
+
+    it("should assemble the configuration in js for the document name") (pending)
+
+    it("should assemble the configuration in js for the special entities like page footer") (pending)
+
+    it("should have a `build` method for generating the document") (pending)
+
+    it("should have a `write` method to save the document as html") (pending)
+
+    it("should own a implicit reference onto itslef") (pending)
+
+  }
+
+/*
+  describe("A DocumentClass") {
+
+    it("is a abstract type describing a document class") (pending)
+
+    it("defines areals which are minimum known to the document class") (pending)
+
+    it("defines pages which are minimum known to the document class") (pending)
+
+    it("defines methods which map onto entities, this implies a minimum set for the document class") (pending)
+
+  }
+*/
 
   describe("A Entity") {
 

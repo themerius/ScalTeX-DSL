@@ -1,6 +1,6 @@
 package scaltex.buildtools
 
-import scala.collection.mutable.HashMap
+import scala.collection.mutable.{HashMap, ListBuffer}
 
 class TemplateStock {
   var headerTemplate = "<html>"
@@ -15,3 +15,11 @@ class TemplateStock {
     case (key, value) => value
   } mkString("\n\n\n")
 }
+
+trait Tray[T] {
+  val tray = ListBuffer.empty[T]
+
+  def add (t: T) = tray += t
+  def get: List[T] = tray.toList
+}
+
