@@ -23,3 +23,23 @@ trait Tray[T] {
   def get: List[T] = tray.toList
 }
 
+abstract class Areal (implicit builder: Builder) {
+  val appendPoint: String
+  val defaultPage: Page
+  val ++ : Binding
+  implicit val areal = this
+
+  def addEntity (e: Entity)
+
+  val change = this
+  def page_to (p: Page)
+  def page_numbering_style_to (p: Page)
+}
+
+trait Page
+
+trait Entity
+
+trait Binding
+
+trait Builder
