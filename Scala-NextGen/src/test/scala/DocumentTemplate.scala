@@ -15,17 +15,27 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   // package scaltex.abstracts
 
+  describe("A TemplateStock") {
+    it("should have a `templateHeader` getter/setter") (pending)
+    it("should have a `addTemplateEntity` method for adding entity snippets") (pending)
+    it("should have a `getTemplateEntity` method for getting entity snippets") (pending)
+    it("should have a `templateFooter` getter/setter") (pending)
+  }
+
 
   describe("A Builder") {
-    // sieht gesamtes dokument
-    // wirft die generatoren jedes areals an.
 
     it("must have a companion object with a list of related areals, in the right predefined order") (pending)
 
-    it("uses areals, pages and entities to define the basis of an document template (the html around)") (pending)
+    it("should set the areal append points in the right order") (pending)
 
-    it("is able to adjust the configuration of the basis document template") (pending)
-    // e.g. footer, document name (esp. patent)
+    it("should fetch for every areal the JSON of each entity of the areal, to instantiate them in the js") (pending)
+
+    it("should assemble the configuration in js for the page layouts") (pending)
+
+    it("should assemble the configuration in js for the document name") (pending)
+
+    it("should assemble the configuration in js for the special entities like page footer") (pending)
 
     it("should have a `build` method for generating the document") (pending)
 
