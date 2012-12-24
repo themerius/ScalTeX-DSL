@@ -1,25 +1,45 @@
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.ShouldMatchers._
+
+import scaltex.buildtools._
 
 class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
-  private var str: String = _
+  private var tmplSt: TemplateStock = _
 
   override def beforeEach() {
-    str = new String("hello world")
+    tmplSt = new TemplateStock
   }
 
   override def afterEach() {
     // delete things
   }
 
-  // package scaltex.abstracts
-
   describe("A TemplateStock") {
-    it("should have a `templateHeader` getter/setter") (pending)
-    it("should have a `addTemplateEntity` method for adding entity snippets") (pending)
-    it("should have a `getTemplateEntity` method for getting entity snippets") (pending)
-    it("should have a `templateFooter` getter/setter") (pending)
+
+    it("should have a `headerTemplate` getter/setter") {
+      tmplSt.headerTemplate should be === ("<html>")
+
+      tmplSt.headerTemplate = "<html><head>...</head>"
+      tmplSt.headerTemplate should be === ("<html><head>...</head>")
+    }
+
+    it("getting all entity snippets as String with `entityTemplate` method") {
+      tmplSt.addTemplateEntity("heading", "<script>...heading...</script>")
+      tmplSt.addTemplateEntity("text", "<script>...text...</script>")
+
+      tmplSt.entityTemplate should include ("<script>...heading...</script>")
+      tmplSt.entityTemplate should include ("<script>...text...</script>")
+    }
+
+    it("should have a `footerTemplate` getter/setter") {
+      tmplSt.footerTemplate should be === ("</html>")
+
+      tmplSt.footerTemplate = "...</html>"
+      tmplSt.footerTemplate should be === ("...</html>")
+    }
+
   }
 
 
