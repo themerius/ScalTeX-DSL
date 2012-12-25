@@ -44,10 +44,14 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   private var pageA: PageA = _
 
   class EntityBindingA extends EntityBinding {
+    override def $ (refName: String): EntityBindingA = {
+      nextRefName = refName
+      return this
+    }
     def entitya (arg: String)(implicit areal: Areal): EntityA = {
       val e = new EntityA(arg)
       e.bindToAreal(areal)
-      if (e.refName != null) addReference(areal, e)
+      registerReference(e)
       return e
     }
   }
@@ -137,7 +141,13 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
       entityA.refName should be === "myname"
     }
 
-    it("should be able to set it's name as reference to an areal-object") (pending)
+    it("should be able to set it's name as property to an areal-object") {
+      val areal = new ArealA
+      entityA.$("myname")
+      entityA.bindToAreal(areal)
+      entityA.registerReference
+      (areal.myname.## == entityA.##) should be === true
+    }
 
   }
 
@@ -191,7 +201,15 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
         ArealA.get(0) should be theSameInstanceAs (ret)
       }
 
-      it("should be able to register the entities reference as property to the corrosponding areal") (pending)
+      it("should be able to register the entities reference as property to the corrosponding areal") {
+        implicit val areal = new ArealA
+        val b = new EntityBindingA
+        var ret = b entitya "test" $ "myname"
+        (areal.myname.## == ret.##) should be === true
+
+        ret = b $ "othername" entitya "othertest"
+        (areal.othername.## == ret.##) should be === true
+      }
 
     }
 

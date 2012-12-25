@@ -61,9 +61,20 @@ trait EntityPageBase {
 
 trait Entity extends EntityPageBase with AppendPoint {
   val id: Int = EntityIdCount.getId
+  var areal: Areal = _
   var refName: String = _
-  def $ (name: String) = refName = name
-  def bindToAreal (areal: Areal) = areal.addEntity(this)
+  def $ (name: String) = {
+    refName = name
+    registerReference
+    this
+  }
+  def bindToAreal (a: Areal) = {
+    a.addEntity(this)
+    areal = a
+  }
+  def registerReference = {
+    if (areal != null && refName != null) areal.updateDynamic(refName)(this)
+  }
 }
 
 trait Page extends EntityPageBase with AppendPoints {
@@ -76,7 +87,14 @@ trait Page extends EntityPageBase with AppendPoints {
 }
 
 trait EntityBinding {
-  def addReference (obj: Areal, ety: Entity) = obj.updateDynamic(ety.refName)(ety)
+  var nextRefName: String = _
+  def $ (refName: String): EntityBinding
+  def registerReference (e: Entity) = {
+    if (this.nextRefName != null) {
+      e.$(nextRefName)
+      this.nextRefName = null
+    }
+  }
 }
 
 trait Builder
