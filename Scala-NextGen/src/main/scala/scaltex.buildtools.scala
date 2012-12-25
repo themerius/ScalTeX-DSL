@@ -1,6 +1,7 @@
 package scaltex.buildtools
 
 import scala.collection.mutable.{HashMap, ListBuffer}
+import scaltex.util.DynamicObject
 
 class TemplateStock {
   var headerTemplate = "<html>"
@@ -23,10 +24,10 @@ trait Tray[T] {
   def get: List[T] = tray.toList
 }
 
-abstract class Areal (implicit builder: Builder) {
+abstract class Areal (implicit builder: Builder) extends DynamicObject {
   val appendPoint: String
   val defaultPage: Page
-  val ++ : Binding
+  val ++ : EntityBinding
   implicit val areal = this
 
   def addEntity (e: Entity)
@@ -36,10 +37,29 @@ abstract class Areal (implicit builder: Builder) {
   def page_numbering_style_to (p: Page)
 }
 
-trait Page
+trait AppendPoint {
+  var appendPoint: String
+}
 
-trait Entity
+trait AppendPoints {
+  val appendPoint: List[String]
+}
 
-trait Binding
+trait EntityPageBase {
+  val templateId: String
+  def toJson: String
+}
+
+trait Entity extends EntityPageBase with AppendPoint {
+  var refName: String = _
+  def $ (name: String) = refName = name
+  def bindToAreal (areal: Areal) = areal.addEntity(this)
+}
+
+trait Page extends EntityPageBase with AppendPoints
+
+trait EntityBinding {
+  def addReference (obj: Areal, ety: Entity) = obj.updateDynamic(ety.refName)(ety)
+}
 
 trait Builder

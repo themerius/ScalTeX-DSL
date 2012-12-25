@@ -3,17 +3,24 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.ShouldMatchers._
 
 import scaltex.buildtools._
+import play.api.libs.json._
 
 class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   private var tmplSt: TemplateStock = _
 
+  class EntityA (a: String) extends Entity {
+    var appendPoint = "content"
+    val templateId = "EntityA"
+    def toJson = Json.toJson(Map(
+      "templateId" -> Json.toJson(templateId),
+      "a" -> Json.toJson(a))).toString
+  }
+  private var entityA: EntityA = _
+
   override def beforeEach() {
     tmplSt = new TemplateStock
-  }
-
-  override def afterEach() {
-    // delete things
+    entityA = new EntityA("test")
   }
 
   describe("A TemplateStock") {
@@ -42,6 +49,33 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   }
 
+  describe("A Entity") {
+
+    it("should be a half abstract type to make concrete") {
+      entityA.isInstanceOf[Entity] should be === true
+    }
+
+    it("should contain a template id name") {
+      entityA.templateId should be === "EntityA"
+    }
+
+    it("knows an append point where it will appended to a page") {
+      entityA.appendPoint should be === "content"
+    }
+
+    it("should generate a JSON suitable for the template snippet") {
+      entityA.toJson should be === """{"templateId":"EntityA","a":"test"}"""
+    }
+
+    it("should be optional nameable via a $ method") {
+      entityA.refName should be === null
+      entityA.$("myname")
+      entityA.refName should be === "myname"
+    }
+
+    it("should be able to set it's name as reference to an areal-object") (pending)
+
+  }
 
   describe("A Tray") {
 
@@ -53,7 +87,6 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     }
 
   }
-
 
   describe("A Areal") {
 
@@ -114,26 +147,6 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   }
 */
-
-  describe("A Entity") {
-
-    it("should be a half abstract type to make concrete") (pending)
-
-    it("should contain a template snippet") (pending)
-
-    it("should generate a JSON suitable for the template snippet") (pending)
-
-    it("knows an append point where it will appended to a page") (pending)
-
-    it("should be optional nameable via a $ method") (pending)
-
-    it("should set it's name as reference to it's assigned object") (pending)
-
-    it("should have a bind method, for binding e.g. to ++") (pending)
-
-    it("should be extensible with logic classes") (pending)
-
-  }
 
   describe("A Page") {
 

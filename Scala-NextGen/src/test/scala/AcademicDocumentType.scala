@@ -1,7 +1,7 @@
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterEach
 
-class AcademicDocumentClassSpec extends FunSpec with BeforeAndAfterEach {
+class AcademicDocumentTypeSpec extends FunSpec with BeforeAndAfterEach {
 
   private var str: String = _
 
@@ -13,7 +13,7 @@ class AcademicDocumentClassSpec extends FunSpec with BeforeAndAfterEach {
     // delete things
   }
 
-  describe("AcademicEntities") {
+  describe("Entities") {
     it("defines a § method for a chapter") (pending)
     it("defines a §§ method for a section") (pending)
     it("defines a §§§ method for a subsection") (pending)
@@ -24,13 +24,13 @@ class AcademicDocumentClassSpec extends FunSpec with BeforeAndAfterEach {
     it("defines a figure method for a figure entity") (pending)
   }
 
-  describe("AcademicAreals") {
+  describe("Areals") {
     it("should have a TableOfContents areal") (pending)
     it("should have a Document areal") (pending)
     it("should have Titlepage areal") (pending)
   }
 
-  describe("AcademicPages") {
+  describe("Pages") {
     it("defines a A4Horizontal value") (pending)
     it("defines a A4Vertical value") (pending)
   }
