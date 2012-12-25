@@ -7,21 +7,78 @@ import play.api.libs.json._
 
 class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
+  // PREPARATION
+
   private var tmplSt: TemplateStock = _
 
   class EntityA (a: String) extends Entity {
     var appendPoint = "content"
     val templateId = "EntityA"
-    def toJson = Json.toJson(Map(
-      "templateId" -> Json.toJson(templateId),
-      "a" -> Json.toJson(a))).toString
+    def toJson = Json.toJson(
+      Map(
+        "templateId" -> Json.toJson(templateId),
+        "json" -> Json.toJson(
+          Map(
+            "id" -> Json.toJson(id),
+            "a" -> Json.toJson(a)
+          )
+        )
+      )
+    ).toString
   }
   private var entityA: EntityA = _
+
+  class PageA extends Page {
+    val appendPoints = {
+      Map(
+        "type" -> "content",
+        "templateVariable" -> "appendPoint_content",
+        "maxHeight" -> "241.3mm") ::
+      Map(
+        "type" -> "footer",
+        "templateVariable" -> "appendPoint_footer",
+        "maxHeight" -> "12.6mm") :: Nil
+    }
+    val templateId = "PageA"
+  }
+  private var pageA: PageA = _
+
+  class EntityBindingA extends EntityBinding {
+    def entitya (arg: String)(implicit areal: Areal): EntityA = {
+      val e = new EntityA(arg)
+      e.bindToAreal(areal)
+      if (e.refName != null) addReference(areal, e)
+      return e
+    }
+  }
+
+  object ArealA extends Tray[Entity]
+
+  class ArealA extends Areal {
+    var appendPoint = "ArealA"
+    val defaultPage = new PageA
+    val ++ = new EntityBindingA
+    def addEntity (e: Entity) = ArealA.add(e)
+    def page_to (p: Page) = None
+    def page_numbering_style_to (p: Page) = None
+  }
+
+  // SETUP
 
   override def beforeEach() {
     tmplSt = new TemplateStock
     entityA = new EntityA("test")
+    pageA = new PageA
   }
+
+  // TEARDOWN
+
+  override def afterEach() {
+    EntityIdCount.id = 0
+    ArealA.tray.clear
+  }
+
+  // TESTCODE
 
   describe("A TemplateStock") {
 
@@ -52,6 +109,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   describe("A Entity") {
 
     it("should be a half abstract type to make concrete") {
+      entityA.isInstanceOf[EntityPageBase] should be === true
       entityA.isInstanceOf[Entity] should be === true
     }
 
@@ -63,8 +121,14 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
       entityA.appendPoint should be === "content"
     }
 
+    it("should have an unique id") {
+      entityA.id should be === 1
+      (new EntityA("x")).id should be === 2
+      (new EntityA("y")).id should be === 3
+    }
+
     it("should generate a JSON suitable for the template snippet") {
-      entityA.toJson should be === """{"templateId":"EntityA","a":"test"}"""
+      entityA.toJson should be === """{"templateId":"EntityA","json":{"id":1,"a":"test"}}"""
     }
 
     it("should be optional nameable via a $ method") {
@@ -74,6 +138,29 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     }
 
     it("should be able to set it's name as reference to an areal-object") (pending)
+
+  }
+
+  describe("A Page") {
+
+    it("is a special form of an entity") {
+      pageA.isInstanceOf[EntityPageBase] should be === true
+    }
+
+    it("defines several append points, where entities are hooked in") {
+      pageA.appendPoints.isInstanceOf[List[Map[String,String]]] should be === true
+    }
+
+    it("defines for every append point a type, templateVariable and maximum height") {
+      pageA.toJson should be === "{\"template\":\"PageA\"," +
+        "\"appendPoints\":[" +
+          "{\"type\":\"content\"," +
+           "\"templateVariable\":\"appendPoint_content\"," +
+           "\"maxHeight\":\"241.3mm\"}," +
+          "{\"type\":\"footer\"," +
+           "\"templateVariable\":\"appendPoint_footer\"," +
+           "\"maxHeight\":\"12.6mm\"}]}"
+    }
 
   }
 
@@ -90,7 +177,24 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   describe("A Areal") {
 
-    it("must have a companion object with a list of related entities, in the right predefined order") (pending)
+    describe("The Entity binding ++") {
+
+      it("binds the entity-method to corrosponding the entity-class") {
+        val b = new EntityBindingA
+        b.entitya("test")(new ArealA).isInstanceOf[EntityA] should be === true
+      }
+
+      it("should register the entity implicit to the calling areal's companion object's list") {
+        implicit val areal = new ArealA
+        val b = new EntityBindingA
+        val ret = b.entitya("test")
+        ArealA.get(0) should be theSameInstanceAs (ret)
+      }
+
+      it("should be able to register the entities reference as property to the corrosponding areal") (pending)
+
+    }
+
 
     it("calls and uses the generator") (pending)
 
@@ -148,29 +252,10 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   }
 */
 
-  describe("A Page") {
-
-    it("is a special form of an entity, which groups entities together") (pending)
-
-    it("defines several append points, where entities are hooked in") (pending)
-
-  }
 
   describe("The Generator") {
 
     it("reads the lists with entities and processes them") (pending)
-
-  }
-
-  describe("The Entity binding ++") {
-
-    it("implements the document-class's methods and binds it to corrosponding entity") (pending)
-
-    it("should register the entity implicit to the calling areal") (pending)
-
-    it("should return the entity") (pending)
-
-    it("should be able to register the entities reference as property to the corrosponding areal") (pending)
 
   }
 

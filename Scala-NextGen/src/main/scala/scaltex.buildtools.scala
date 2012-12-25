@@ -2,6 +2,15 @@ package scaltex.buildtools
 
 import scala.collection.mutable.{HashMap, ListBuffer}
 import scaltex.util.DynamicObject
+import play.api.libs.json._
+
+object EntityIdCount {
+  var id = 0
+  def getId: Int = {
+    id += 1
+    return id
+  }
+}
 
 class TemplateStock {
   var headerTemplate = "<html>"
@@ -24,11 +33,11 @@ trait Tray[T] {
   def get: List[T] = tray.toList
 }
 
-abstract class Areal (implicit builder: Builder) extends DynamicObject {
-  val appendPoint: String
+abstract class Areal extends DynamicObject with AppendPoint {
+  // (implicit builder: Builder)
   val defaultPage: Page
-  val ++ : EntityBinding
   implicit val areal = this
+  val ++ : EntityBinding
 
   def addEntity (e: Entity)
 
@@ -42,7 +51,7 @@ trait AppendPoint {
 }
 
 trait AppendPoints {
-  val appendPoint: List[String]
+  val appendPoints: List[Map[String, String]]
 }
 
 trait EntityPageBase {
@@ -51,12 +60,20 @@ trait EntityPageBase {
 }
 
 trait Entity extends EntityPageBase with AppendPoint {
+  val id: Int = EntityIdCount.getId
   var refName: String = _
   def $ (name: String) = refName = name
   def bindToAreal (areal: Areal) = areal.addEntity(this)
 }
 
-trait Page extends EntityPageBase with AppendPoints
+trait Page extends EntityPageBase with AppendPoints {
+  def toJson = Json.toJson(
+    Map(
+      "template" -> Json.toJson(templateId),
+      "appendPoints" -> Json.toJson(appendPoints)
+    )
+  ).toString
+}
 
 trait EntityBinding {
   def addReference (obj: Areal, ety: Entity) = obj.updateDynamic(ety.refName)(ety)
