@@ -43,6 +43,21 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   }
   private var pageA: PageA = _
 
+  class PageB extends Page {
+    val appendPoints = {
+      Map(
+        "type" -> "content",
+        "templateVariable" -> "appendPoint_content",
+        "maxHeight" -> "241.3mm") ::
+      Map(
+        "type" -> "footer",
+        "templateVariable" -> "appendPoint_footer",
+        "maxHeight" -> "12.6mm") :: Nil
+    }
+    val templateId = "PageB"
+  }
+  private var pageB: PageB = _
+
   class EntityBindingA extends EntityBinding {
     override def $ (refName: String): EntityBindingA = {
       nextRefName = refName
@@ -56,15 +71,23 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     }
   }
 
-  object ArealA extends Tray[Entity]
+  object ArealA extends Tray[EntityPageBase]
 
   class ArealA extends Areal {
+    val companion = ArealA
     var appendPoint = "ArealA"
     val defaultPage = new PageA
+    setCurrentPage(defaultPage)
     val ++ = new EntityBindingA
-    val companion = ArealA
-    def page_to (p: Page) = None
-    def page_numbering_style_to (p: Page) = None
+    def newpage = {
+      addToList(getCurrentPage)
+      this
+    }
+    def page_to (p: Page) = {
+      setCurrentPage(p)
+      addToList(getCurrentPage)
+      this
+    }
   }
 
   // SETUP
@@ -73,6 +96,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     tmplSt = new TemplateStock
     entityA = new EntityA("test")
     pageA = new PageA
+    pageB = new PageB
   }
 
   // TEARDOWN
@@ -218,7 +242,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     }
 
     it("has as minimum one assigned default page") {
-      (new ArealA).defaultPage.isInstanceOf[PageA] should be === true
+      (new ArealA).getCurrentPage.isInstanceOf[PageA] should be === true
     }
 
     it("extends ordinary scala objects") {
@@ -231,12 +255,25 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
       aa.areal should be theSameInstanceAs (aa)
     }
 
+    it("is able to change the page layout") {
+      val aa = new ArealA
+      aa.getCurrentPage.isInstanceOf[PageA] should be === true
+      aa.change page_to pageB
+      aa.getCurrentPage should be theSameInstanceAs (pageB)
+    }
+
     describe("The Generator") {
 
       it("produces out of the areal entity-list a json datastructure") {
         object ArealInstance extends ArealA {
           ++ entitya "test1"
           ++ entitya "test2"
+          change page_to pageB
+          ++ entitya "test3"
+          ++ entitya "test4"
+          newpage
+          ++ entitya "test5"
+          ++ entitya "test6"
         }
         val result = (new Generator(ArealInstance)).generate
         val expect = """
@@ -247,6 +284,20 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
                 {"templateId":"EntityA","json":{"id":2,"a":"test1"}},
                 {"templateId":"EntityA","json":{"id":3,"a":"test2"}},
               ]
+            },
+            {
+              pageType: "PageB",
+              entities: [
+                {"templateId":"EntityA","json":{"id":4,"a":"test3"}},
+                {"templateId":"EntityA","json":{"id":5,"a":"test4"}},
+              ]
+            },
+            {
+              pageType: "PageB",
+              entities: [
+                {"templateId":"EntityA","json":{"id":6,"a":"test5"}},
+                {"templateId":"EntityA","json":{"id":7,"a":"test6"}},
+              ]
             }
           ];
         """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
@@ -254,10 +305,6 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
       }
 
     }
-
-    it("is able to manipulate the page numbering style") (pending)
-
-    it("is able to change the page layout") (pending)
 
     it("should accept a implicit reference onto a Builder") (pending)
 

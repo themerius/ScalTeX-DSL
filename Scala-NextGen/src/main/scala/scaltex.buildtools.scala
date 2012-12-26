@@ -35,16 +35,19 @@ trait Tray[T] {
 
 abstract class Areal extends DynamicObject with AppendPoint {
   // (implicit builder: Builder)
+  val companion: Tray[EntityPageBase]
   val defaultPage: Page
+  var currentPage: Page = _
+  def setCurrentPage (p: Page) = currentPage = p
+  def getCurrentPage = currentPage
   implicit val areal = this
   val ++ : EntityBinding  // the compiler doesn't accept ++:
 
-  val companion: Tray[Entity]
-  def addEntity (e: Entity) = companion.add(e)
+  def addToList (e: EntityPageBase) = companion.add(e)
 
   val change = this
-  def page_to (p: Page)
-  def page_numbering_style_to (p: Page)
+  def newpage: Areal
+  def page_to (p: Page): Areal
 }
 
 trait AppendPoint {
@@ -70,7 +73,7 @@ trait Entity extends EntityPageBase with AppendPoint {
     this
   }
   def bindToAreal (a: Areal) = {
-    a.addEntity(this)
+    a.addToList(this)
     areal = a
   }
   def registerReference = {
@@ -99,15 +102,32 @@ trait EntityBinding {
 }
 
 class Generator (areal: Areal) {
+
+  def getEntityPageList: List[EntityPageBase] = {
+    if (!areal.companion.get(0).isInstanceOf[Page])
+      areal.defaultPage :: areal.companion.get
+    else
+      areal.companion.get
+  }
+
   def generate: String = {
+    val entities = getEntityPageList
+
     var ret = "var " + areal.appendPoint + " = ["
-    ret += "{pageType: \"" + areal.defaultPage.templateId + "\",entities: ["
-    for (entity <- areal.companion.get) {
-      ret += entity.toJson + ","
+    ret += "{pageType: \"" + entities.head.templateId + "\",entities: ["
+
+    for (entity <- entities.tail) {
+      if (entity.isInstanceOf[Page]) {
+        ret += "]},"  // close the page before
+        ret += "{pageType: \"" + entity.templateId + "\",entities: ["
+      } else {
+        ret += entity.toJson + ","
+      }
     }
     ret += "]}];"
     return ret
   }
+
 }
 
 trait Builder
