@@ -62,7 +62,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     var appendPoint = "ArealA"
     val defaultPage = new PageA
     val ++ = new EntityBindingA
-    def addEntity (e: Entity) = ArealA.add(e)
+    val companion = ArealA
     def page_to (p: Page) = None
     def page_numbering_style_to (p: Page) = None
   }
@@ -231,11 +231,33 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
       aa.areal should be theSameInstanceAs (aa)
     }
 
+    describe("The Generator") {
+
+      it("produces out of the areal entity-list a json datastructure") {
+        object ArealInstance extends ArealA {
+          ++ entitya "test1"
+          ++ entitya "test2"
+        }
+        val result = (new Generator(ArealInstance)).generate
+        val expect = """
+          var ArealA = [
+            {
+              pageType: "PageA",
+              entities: [
+                {"templateId":"EntityA","json":{"id":2,"a":"test1"}},
+                {"templateId":"EntityA","json":{"id":3,"a":"test2"}},
+              ]
+            }
+          ];
+        """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
+        result should be === expect
+      }
+
+    }
+
     it("is able to manipulate the page numbering style") (pending)
 
     it("is able to change the page layout") (pending)
-
-    it("calls and uses the generator") (pending)
 
     it("should accept a implicit reference onto a Builder") (pending)
 
@@ -277,11 +299,5 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   }
 */
 
-
-  describe("The Generator") {
-
-    it("reads the lists with entities and processes them") (pending)
-
-  }
 
 }

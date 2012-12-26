@@ -37,9 +37,10 @@ abstract class Areal extends DynamicObject with AppendPoint {
   // (implicit builder: Builder)
   val defaultPage: Page
   implicit val areal = this
-  val ++ : EntityBinding
+  val ++ : EntityBinding  // the compiler doesn't accept ++:
 
-  def addEntity (e: Entity)
+  val companion: Tray[Entity]
+  def addEntity (e: Entity) = companion.add(e)
 
   val change = this
   def page_to (p: Page)
@@ -94,6 +95,18 @@ trait EntityBinding {
       e.$(nextRefName)
       this.nextRefName = null
     }
+  }
+}
+
+class Generator (areal: Areal) {
+  def generate: String = {
+    var ret = "var " + areal.appendPoint + " = ["
+    ret += "{pageType: \"" + areal.defaultPage.templateId + "\",entities: ["
+    for (entity <- areal.companion.get) {
+      ret += entity.toJson + ","
+    }
+    ret += "]}];"
+    return ret
   }
 }
 
