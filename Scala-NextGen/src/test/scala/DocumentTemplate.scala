@@ -40,6 +40,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
         "maxHeight" -> "12.6mm") :: Nil
     }
     val templateId = "PageA"
+    val officialName = "A4"
   }
   private var pageA: PageA = _
 
@@ -55,6 +56,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
         "maxHeight" -> "12.6mm") :: Nil
     }
     val templateId = "PageB"
+    val officialName = "A4Horizontal"
   }
   private var pageB: PageB = _
 
@@ -73,7 +75,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   object ArealA extends Tray[EntityPageBase]
 
-  class ArealA extends Areal {
+  class ArealA(implicit builder: Builder = null) extends Areal {
     val companion = ArealA
     var appendPoint = "ArealA"
     val defaultPage = new PageA
@@ -90,6 +92,15 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     }
   }
 
+  object BuilderA extends Tray[Areal]
+
+  class BuilderA extends Builder {
+    val companion = BuilderA
+    val allPages = new PageA :: new PageB :: Nil
+    def build = None
+    def write (dest: String) = None
+  }
+
   // SETUP
 
   override def beforeEach() {
@@ -104,6 +115,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   override def afterEach() {
     EntityIdCount.id = 0
     ArealA.tray.clear
+    BuilderA.tray.clear
   }
 
   // TESTCODE
@@ -306,19 +318,105 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
     }
 
-    it("should accept a implicit reference onto a Builder") (pending)
+    it("should accept a implicit reference onto a Builder") {
+      (new ArealA).builder should be === null
+
+      implicit val builder = new BuilderA
+      val areal = new ArealA
+      areal.builder should be theSameInstanceAs (builder)
+    }
 
   }
 
   describe("A Builder") {
 
-    it("must have a companion object with a list of related areals, in the right predefined order") (pending)
+    it("must have a companion object with a list of related areals, in the right predefined order") {
+      implicit val builder = new BuilderA
+      val areal = new ArealA
+      BuilderA.get(0) should be theSameInstanceAs (areal)
+    }
 
-    it("should set the areal append points in the right order") (pending)
+    it("should own a implicit reference onto itslef") {
+      val builder = new BuilderA
+      builder.builder should be theSameInstanceAs (builder)
+    }
 
-    it("should fetch for every areal the JSON of each entity of the areal, to instantiate them in the js") (pending)
+    it("should set the areal append points in the right order") {
+      implicit val builder = new BuilderA
+      val a1 = new ArealA
+      val a2 = new ArealA
+      BuilderA.get(0) should be theSameInstanceAs (a1)
+      BuilderA.get(1) should be theSameInstanceAs (a2)
+    }
 
-    it("should assemble the configuration in js for the page layouts") (pending)
+    it("should know all pages available for this template") {
+      val builder = new BuilderA
+      builder.allPages(0).isInstanceOf[PageA] should be === true
+    }
+
+    it("calls the Generator for every Areal to form the js entity instances") {
+      object BuilderObject extends BuilderA {
+        val areal = new ArealA
+        ArealObject1
+        ArealObject2
+      }
+      object ArealObject1 extends ArealA {
+        ++ entitya "test1"
+      }
+      object ArealObject2 extends ArealA {
+        ++ entitya "test2"
+      }
+
+      BuilderObject.generateJsEntityInstances.mkString("") should be === """
+        var ArealA = [
+          {
+            pageType: "PageA",
+            entities: [
+              {"templateId":"EntityA","json":{"id":2,"a":"test1"}},
+              {"templateId":"EntityA","json":{"id":3,"a":"test2"}},
+            ]
+          }
+        ];
+      """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
+    }
+
+    it("should assemble the page factory") {
+      val builder = new BuilderA
+      builder.generateJsPageFactory should be === """
+      var pageFactory = new scaltex.PageFactory({
+        A4: {
+          "template":"PageA",
+          "appendPoints":[
+            {
+              "type":"content",
+              "templateVariable":"appendPoint_content",
+              "maxHeight":"241.3mm"
+            },
+            {
+              "type":"footer",
+              "templateVariable":"appendPoint_footer",
+              "maxHeight":"12.6mm"
+            }
+          ]
+        },
+        A4Horizontal: {
+          "template":"PageB",
+          "appendPoints":[
+            {
+              "type":"content",
+              "templateVariable":"appendPoint_content",
+              "maxHeight":"241.3mm"
+            },
+            {
+              "type":"footer",
+              "templateVariable":"appendPoint_footer",
+              "maxHeight":"12.6mm"
+            }
+          ]
+        },
+      });
+      """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
+    }
 
     it("should assemble the configuration in js for the document name") (pending)
 
@@ -327,8 +425,6 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
     it("should have a `build` method for generating the document") (pending)
 
     it("should have a `write` method to save the document as html") (pending)
-
-    it("should own a implicit reference onto itslef") (pending)
 
   }
 

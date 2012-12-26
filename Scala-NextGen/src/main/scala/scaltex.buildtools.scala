@@ -33,8 +33,10 @@ trait Tray[T] {
   def get: List[T] = tray.toList
 }
 
-abstract class Areal extends DynamicObject with AppendPoint {
-  // (implicit builder: Builder)
+abstract class Areal (implicit val builder: Builder) extends DynamicObject with AppendPoint {
+  if (builder != null)
+    builder.addToList(this)
+
   val companion: Tray[EntityPageBase]
   val defaultPage: Page
   var currentPage: Page = _
@@ -82,6 +84,7 @@ trait Entity extends EntityPageBase with AppendPoint {
 }
 
 trait Page extends EntityPageBase with AppendPoints {
+  val officialName: String
   def toJson = Json.toJson(
     Map(
       "template" -> Json.toJson(templateId),
@@ -130,4 +133,22 @@ class Generator (areal: Areal) {
 
 }
 
-trait Builder
+trait Builder {
+  val companion: Tray[Areal]
+  implicit val builder = this
+  val allPages: List[Page]
+  def addToList (a: Areal) = companion.add(a)
+  def generateJsEntityInstances =
+    for (areal <- companion.get) yield (new Generator(areal)).generate
+  def generateJsPageFactory: String = {
+    var ret = "var pageFactory = new scaltex.PageFactory({"
+    for (page <- allPages) {
+      ret += page.officialName + ": "
+      ret += page.toJson + ","
+    }
+    ret += "});"
+    ret
+  }
+  def build
+  def write (destination: String)
+}
