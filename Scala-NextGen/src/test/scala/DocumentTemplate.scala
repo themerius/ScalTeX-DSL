@@ -213,24 +213,31 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
     }
 
+    it("is related to an append point, where pages are appended to") {
+      (new ArealA).appendPoint should be === "ArealA"
+    }
 
-    it("calls and uses the generator") (pending)
+    it("has as minimum one assigned default page") {
+      (new ArealA).defaultPage.isInstanceOf[PageA] should be === true
+    }
 
-    it("is related to an append point, where pages are appended to") (pending)
+    it("extends ordinary scala objects") {
+      object ArealInstance extends ArealA
+      ArealInstance.isInstanceOf[ArealA] should be === true
+    }
 
-    it("has as minimum one assigned default page") (pending)
+    it("should own a implicit reference onto itslef") {
+      val aa = new ArealA
+      aa.areal should be theSameInstanceAs (aa)
+    }
 
-    it("extends ordinary scala objects") (pending)
-
-    it("should own a implicit reference onto itslef") (pending)
-
-    it("should accept a implicit reference onto a Builder") (pending)
-
-    it("should have methods for manipulating the page numbering") (pending)
+    it("is able to manipulate the page numbering style") (pending)
 
     it("is able to change the page layout") (pending)
 
-    it("is able to manipulate configuration") (pending)
+    it("calls and uses the generator") (pending)
+
+    it("should accept a implicit reference onto a Builder") (pending)
 
   }
 
