@@ -3,6 +3,7 @@ package scaltex.buildtools
 import scala.collection.mutable.{HashMap, ListBuffer}
 import scaltex.util.DynamicObject
 import play.api.libs.json._
+import java.io.{OutputStreamWriter, FileOutputStream}
 
 object EntityIdCount {
   var id = 0
@@ -12,8 +13,8 @@ object EntityIdCount {
   }
 }
 
-class TemplateStock {
-  var headerTemplate = "<html>"
+trait TemplateStock {
+  def headerTemplate (title: String) = s"<html><title>$title</title>"
   var footerTemplate = "</html>"
 
   val entityStock = new HashMap[String,String]()
@@ -23,7 +24,7 @@ class TemplateStock {
   def getTemplateEntity(name: String) = entityStock(name)
   def entityTemplate = entityStock.view map {
     case (key, value) => value
-  } mkString("\n\n\n")
+  } mkString("")
 }
 
 trait Tray[T] {
@@ -133,13 +134,15 @@ class Generator (areal: Areal) {
 
 }
 
-trait Builder {
+trait Builder extends TemplateStock {
   val companion: Tray[Areal]
   implicit val builder = this
   val allPages: List[Page]
   def addToList (a: Areal) = companion.add(a)
-  def generateJsEntityInstances =
-    for (areal <- companion.get) yield (new Generator(areal)).generate
+
+  def generateJsEntityInstances: String =
+    (for (areal <- companion.get) yield (new Generator(areal)).generate).mkString("")
+
   def generateJsPageFactory: String = {
     var ret = "var pageFactory = new scaltex.PageFactory({"
     for (page <- allPages) {
@@ -149,6 +152,58 @@ trait Builder {
     ret += "});"
     ret
   }
-  def build
-  def write (destination: String)
+
+  def generateHeader =
+    if (documentName != null)
+      headerTemplate(documentName)
+    else
+      headerTemplate("Document")
+
+  def generateFooter = footerTemplate
+
+  def generateJsSpecialEntities: String
+
+  def generateJsArealSetup: String = {
+    var ret = ""
+    for (areal <- companion.get) {
+      ret += "var " + areal.appendPoint + "_areal = new scaltex.Areal("
+      ret += "\"" + areal.appendPoint + "\", " + areal.appendPoint + ", "
+      ret += "pageFactory, specialEntities);"
+      ret += areal.appendPoint + "_areal" + ".generateEntities();"
+      ret += areal.appendPoint + "_areal" + ".renderEntities();"
+      ret += areal.appendPoint + "_areal" + ".mountEntitiesToConstructionArea();"
+    }
+    ret += "window.onload = function () {"
+    for (areal <- companion.get) {
+      ret += areal.appendPoint + "_areal" + ".moveEntitiesToNewPages();"
+      ret += areal.appendPoint + "_areal" + ".destructConstructionAreas();"
+    }
+    ret += "};"
+    return ret
+  }
+
+  def generateArealAppendPoints: String = {
+    var ret = ""
+    for (areal <- companion.get) {
+      ret += "<div id=\"" + areal.appendPoint + "\"></div>"
+    }
+    ret
+  }
+
+  val set = this
+  var documentName: String = _
+  def document_name (name: String) = documentName = name
+
+  def build: String = {
+    generateHeader + generateArealAppendPoints +
+    entityTemplate + "<script>" + generateJsEntityInstances +
+    generateJsSpecialEntities + generateJsPageFactory +
+    generateJsArealSetup + "</script>" + generateFooter
+  }
+
+  def write (destination: String) = {
+    val out = new OutputStreamWriter(new FileOutputStream(destination), "UTF-8")
+    out.append(build)
+    out.close
+  }
 }

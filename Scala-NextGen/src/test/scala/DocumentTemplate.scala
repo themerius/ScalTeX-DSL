@@ -9,8 +9,6 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
 
   // PREPARATION
 
-  private var tmplSt: TemplateStock = _
-
   class EntityA (a: String) extends Entity {
     var appendPoint = "content"
     val templateId = "EntityA"
@@ -97,14 +95,28 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   class BuilderA extends Builder {
     val companion = BuilderA
     val allPages = new PageA :: new PageB :: Nil
-    def build = None
-    def write (dest: String) = None
+    def generateJsSpecialEntities = """
+      var specialEntities = [
+        {
+          templateId: "footer",
+          json: {pageNr: "@nextPageNr"},
+          requiredPageAppendPoint: "footer"
+        }
+      ];
+    """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
   }
+
+  trait TemplateStockA extends TemplateStock {
+    addTemplateEntity("heading", "<script>...heading...</script>")
+    addTemplateEntity("text", "<script>...text...</script>")
+  }
+  private var tmplSt: TemplateStock = _
 
   // SETUP
 
   override def beforeEach() {
-    tmplSt = new TemplateStock
+    class TSA extends TemplateStockA
+    tmplSt = new TSA
     entityA = new EntityA("test")
     pageA = new PageA
     pageB = new PageB
@@ -119,32 +131,6 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
   }
 
   // TESTCODE
-
-  describe("A TemplateStock") {
-
-    it("should have a `headerTemplate` getter/setter") {
-      tmplSt.headerTemplate should be === ("<html>")
-
-      tmplSt.headerTemplate = "<html><head>...</head>"
-      tmplSt.headerTemplate should be === ("<html><head>...</head>")
-    }
-
-    it("getting all entity snippets as String with `entityTemplate` method") {
-      tmplSt.addTemplateEntity("heading", "<script>...heading...</script>")
-      tmplSt.addTemplateEntity("text", "<script>...text...</script>")
-
-      tmplSt.entityTemplate should include ("<script>...heading...</script>")
-      tmplSt.entityTemplate should include ("<script>...text...</script>")
-    }
-
-    it("should have a `footerTemplate` getter/setter") {
-      tmplSt.footerTemplate should be === ("</html>")
-
-      tmplSt.footerTemplate = "...</html>"
-      tmplSt.footerTemplate should be === ("...</html>")
-    }
-
-  }
 
   describe("A Entity") {
 
@@ -367,7 +353,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
         ++ entitya "test2"
       }
 
-      BuilderObject.generateJsEntityInstances.mkString("") should be === """
+      BuilderObject.generateJsEntityInstances should be === """
         var ArealA = [
           {
             pageType: "PageA",
@@ -418,29 +404,168 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
       """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
     }
 
-    it("should assemble the configuration in js for the document name") (pending)
+    it("should be able to manipulate document's name") {
+      val builder = new BuilderA
+      builder.generateHeader should be === "<html><title>Document</title>"
 
-    it("should assemble the configuration in js for the special entities like page footer") (pending)
+      builder.set document_name "My Document"
+      builder.documentName should be === "My Document"
 
-    it("should have a `build` method for generating the document") (pending)
+      builder.generateHeader should be === "<html><title>My Document</title>"
+    }
 
-    it("should have a `write` method to save the document as html") (pending)
+    it("should assemble the configuration in js for the special entities like page header/footer") {
+      val builder = new BuilderA
+      builder.generateJsSpecialEntities should be === """
+      var specialEntities = [
+        {
+          templateId: "footer",
+          json: {pageNr: "@nextPageNr"},
+          requiredPageAppendPoint: "footer"
+        }
+      ];
+    """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
+    }
+
+    it("should assemble the js areal setup code") {
+      object builder extends BuilderA {
+        val areal = new ArealA
+      }
+      builder.generateJsArealSetup should be === """
+        var ArealA_areal = new scaltex.Areal("ArealA", ArealA, pageFactory, specialEntities);
+        ArealA_areal.generateEntities();
+        ArealA_areal.renderEntities();
+        ArealA_areal.mountEntitiesToConstructionArea();
+
+        window.onload = function () {
+          ArealA_areal.moveEntitiesToNewPages();
+          ArealA_areal.destructConstructionAreas();
+        };
+      """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
+    }
+
+    it("should generate the areal append points") {
+      object builder extends BuilderA {
+        val areal = new ArealA
+      }
+      builder.generateArealAppendPoints should be === "<div id=\"ArealA\"></div>"
+    }
+
+    it("should have a `build` method for generating the document") {
+      object builder extends BuilderA with TemplateStockA {
+        val areal = new ArealA
+        ArealObject
+        set document_name "My Document"
+      }
+      object ArealObject extends ArealA {
+        ++ entitya "test1"
+        ++ entitya "test2"
+      }
+      builder.build should be === """
+        <html><title>My Document</title>
+        <div id="ArealA"></div>
+        <script>...text...</script>
+        <script>...heading...</script>
+        <script>
+        var ArealA = [
+          {
+            pageType: "PageA",
+            entities: [
+              {"templateId":"EntityA","json":{"id":2,"a":"test1"}},
+              {"templateId":"EntityA","json":{"id":3,"a":"test2"}},
+            ]
+          }
+        ];
+        var specialEntities = [
+          {
+            templateId: "footer",
+            json: {pageNr: "@nextPageNr"},
+            requiredPageAppendPoint: "footer"
+          }
+        ];
+        var pageFactory = new scaltex.PageFactory({
+          A4: {
+            "template":"PageA",
+            "appendPoints":[
+              {
+                "type":"content",
+                "templateVariable":"appendPoint_content",
+                "maxHeight":"241.3mm"
+              },
+              {
+                "type":"footer",
+                "templateVariable":"appendPoint_footer",
+                "maxHeight":"12.6mm"
+              }
+            ]
+          },
+          A4Horizontal: {
+            "template":"PageB",
+            "appendPoints":[
+              {
+                "type":"content",
+                "templateVariable":"appendPoint_content",
+                "maxHeight":"241.3mm"
+              },
+              {
+                "type":"footer",
+                "templateVariable":"appendPoint_footer",
+                "maxHeight":"12.6mm"
+              }
+            ]
+          },
+        });
+        var ArealA_areal = new scaltex.Areal("ArealA", ArealA, pageFactory, specialEntities);
+        ArealA_areal.generateEntities();
+        ArealA_areal.renderEntities();
+        ArealA_areal.mountEntitiesToConstructionArea();
+
+        window.onload = function () {
+          ArealA_areal.moveEntitiesToNewPages();
+          ArealA_areal.destructConstructionAreas();
+        };
+        </script>
+        </html>
+      """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
+    }
+
+    it("should have a `write` method to save the document as html") {
+      object builder extends BuilderA with TemplateStockA {
+        val areal = new ArealA
+        ArealObject
+        set document_name "My Document"
+      }
+      object ArealObject extends ArealA {
+        ++ entitya "test1"
+        ++ entitya "test2"
+      }
+      builder.write("output.html")
+      val file = scala.io.Source.fromFile("output.html").mkString
+      file should be === builder.build
+      (new java.io.File("output.html")).delete()
+    }
 
   }
 
-/*
-  describe("A DocumentClass") {
+  describe("A TemplateStock") {
 
-    it("is a abstract type describing a document class") (pending)
+    it("should have a `headerTemplate` method with title argument") {
+      tmplSt.headerTemplate("Doc") should be === "<html><title>Doc</title>"
+    }
 
-    it("defines areals which are minimum known to the document class") (pending)
+    it("getting all entity snippets as String with `entityTemplate` method") {
+      tmplSt.entityTemplate should include ("<script>...heading...</script>")
+      tmplSt.entityTemplate should include ("<script>...text...</script>")
+    }
 
-    it("defines pages which are minimum known to the document class") (pending)
+    it("should have a `footerTemplate` getter/setter") {
+      tmplSt.footerTemplate should be === ("</html>")
 
-    it("defines methods which map onto entities, this implies a minimum set for the document class") (pending)
+      tmplSt.footerTemplate = "...</html>"
+      tmplSt.footerTemplate should be === ("...</html>")
+    }
 
   }
-*/
 
 
 }
