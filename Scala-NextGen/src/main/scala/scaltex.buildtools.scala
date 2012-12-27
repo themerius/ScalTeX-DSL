@@ -2,6 +2,7 @@ package scaltex.buildtools
 
 import scala.collection.mutable.{HashMap, ListBuffer}
 import scaltex.util.DynamicObject
+import scaltex.buildtools.logic.Logic
 import play.api.libs.json._
 import java.io.{OutputStreamWriter, FileOutputStream}
 
@@ -66,7 +67,7 @@ trait EntityPageBase {
   def toJson: String
 }
 
-trait Entity extends EntityPageBase with AppendPoint {
+trait Entity extends EntityPageBase with AppendPoint with Logic {
   val id: Int = EntityIdCount.getId
   var areal: Areal = _
   var refName: String = _
@@ -78,6 +79,7 @@ trait Entity extends EntityPageBase with AppendPoint {
   def bindToAreal (a: Areal) = {
     a.addToList(this)
     areal = a
+    execLogic
   }
   def registerReference = {
     if (areal != null && refName != null) areal.updateDynamic(refName)(this)

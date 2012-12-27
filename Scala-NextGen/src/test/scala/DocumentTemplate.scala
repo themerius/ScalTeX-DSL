@@ -1,3 +1,5 @@
+package scaltex.test
+
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.ShouldMatchers._
@@ -5,7 +7,7 @@ import org.scalatest.matchers.ShouldMatchers._
 import scaltex.buildtools._
 import play.api.libs.json._
 
-  // PREPARATION
+// PREPARATION
 
 class EntityA (a: String) extends Entity {
   var appendPoint = "content"

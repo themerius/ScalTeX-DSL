@@ -1,29 +1,52 @@
+package scaltex.test
+
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.matchers.ShouldMatchers._
+
+import scaltex.buildtools.logic._
+
 
 class LogicSpec extends FunSpec with BeforeAndAfterEach {
 
-  private var str: String = _
+  private var areal: ArealA = _
 
   override def beforeEach() {
-    str = new String("hello world")
+    areal = new ArealA
   }
 
   override def afterEach() {
-    // delete things
+    areal.companion.tray.clear
   }
 
   describe("The Logic trait") {
 
-    it("is a abstract marker") (pending)
+    it("is a abstract marker") {
+      class L extends Logic
+      (new L).isInstanceOf[Logic] should be === true
+    }
 
   }
 
   describe("A FigureNumber") {
 
-    it("should extend an entity with an figure number variable") (pending)
+    class FigureEntity (a: String) extends EntityA(a) with FigureNumber
 
-    it("should count figures and set the appropriate number for the particular figure") (pending)
+    it("should extend an entity with an figure number variable") {
+      val fig = new FigureEntity("test")
+      fig.figureNumber should be === -1
+      fig.bindToAreal(areal)
+      fig.figureNumber should be === 1
+    }
+
+    it("should count figures and set the appropriate number for the particular figure") {
+      val fig1 = new FigureEntity("test1")
+      val fig2 = new FigureEntity("test2")
+      fig1.bindToAreal(areal)
+      fig2.bindToAreal(areal)
+      fig1.figureNumber should be === 1
+      fig2.figureNumber should be === 2
+    }
   }
 
   describe("A SectionNumber") {
