@@ -5,111 +5,113 @@ import org.scalatest.matchers.ShouldMatchers._
 import scaltex.buildtools._
 import play.api.libs.json._
 
-class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
-
   // PREPARATION
 
-  class EntityA (a: String) extends Entity {
-    var appendPoint = "content"
-    val templateId = "EntityA"
-    def toJson = Json.toJson(
-      Map(
-        "templateId" -> Json.toJson(templateId),
-        "json" -> Json.toJson(
-          Map(
-            "id" -> Json.toJson(id),
-            "a" -> Json.toJson(a)
-          )
+class EntityA (a: String) extends Entity {
+  var appendPoint = "content"
+  val templateId = "EntityA"
+  def toJson = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson(templateId),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(id),
+          "a" -> Json.toJson(a)
         )
       )
-    ).toString
+    )
+  ).toString
+}
+
+class PageA extends Page {
+  val appendPoints = {
+    Map(
+      "type" -> "content",
+      "templateVariable" -> "appendPoint_content",
+      "maxHeight" -> "241.3mm") ::
+    Map(
+      "type" -> "footer",
+      "templateVariable" -> "appendPoint_footer",
+      "maxHeight" -> "12.6mm") :: Nil
   }
+  val templateId = "PageA"
+  val officialName = "A4"
+}
+
+class PageB extends Page {
+  val appendPoints = {
+    Map(
+      "type" -> "content",
+      "templateVariable" -> "appendPoint_content",
+      "maxHeight" -> "241.3mm") ::
+    Map(
+      "type" -> "footer",
+      "templateVariable" -> "appendPoint_footer",
+      "maxHeight" -> "12.6mm") :: Nil
+  }
+  val templateId = "PageB"
+  val officialName = "A4Horizontal"
+}
+
+class EntityBindingA extends EntityBinding {
+  override def $ (refName: String): EntityBindingA = {
+    nextRefName = refName
+    return this
+  }
+  def entitya (arg: String)(implicit areal: Areal): EntityA = {
+    val e = new EntityA(arg)
+    e.bindToAreal(areal)
+    registerReference(e)
+    return e
+  }
+}
+
+object ArealA extends Tray[EntityPageBase]
+
+class ArealA(implicit builder: Builder = null) extends Areal {
+  val companion = ArealA
+  var appendPoint = "ArealA"
+  val defaultPage = new PageA
+  setCurrentPage(defaultPage)
+  val ++ = new EntityBindingA
+  def newpage = {
+    addToList(getCurrentPage)
+    this
+  }
+  def page_to (p: Page) = {
+    setCurrentPage(p)
+    addToList(getCurrentPage)
+    this
+  }
+}
+
+object BuilderA extends Tray[Areal]
+
+class BuilderA extends Builder {
+  val companion = BuilderA
+  val allPages = new PageA :: new PageB :: Nil
+  def generateJsSpecialEntities = """
+    var specialEntities = [
+      {
+        templateId: "footer",
+        json: {pageNr: "@nextPageNr"},
+        requiredPageAppendPoint: "footer"
+      }
+    ];
+  """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
+}
+
+trait TemplateStockA extends TemplateStock {
+  addTemplateEntity("heading", "<script>...heading...</script>")
+  addTemplateEntity("text", "<script>...text...</script>")
+}
+
+
+class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
+
   private var entityA: EntityA = _
-
-  class PageA extends Page {
-    val appendPoints = {
-      Map(
-        "type" -> "content",
-        "templateVariable" -> "appendPoint_content",
-        "maxHeight" -> "241.3mm") ::
-      Map(
-        "type" -> "footer",
-        "templateVariable" -> "appendPoint_footer",
-        "maxHeight" -> "12.6mm") :: Nil
-    }
-    val templateId = "PageA"
-    val officialName = "A4"
-  }
   private var pageA: PageA = _
-
-  class PageB extends Page {
-    val appendPoints = {
-      Map(
-        "type" -> "content",
-        "templateVariable" -> "appendPoint_content",
-        "maxHeight" -> "241.3mm") ::
-      Map(
-        "type" -> "footer",
-        "templateVariable" -> "appendPoint_footer",
-        "maxHeight" -> "12.6mm") :: Nil
-    }
-    val templateId = "PageB"
-    val officialName = "A4Horizontal"
-  }
   private var pageB: PageB = _
-
-  class EntityBindingA extends EntityBinding {
-    override def $ (refName: String): EntityBindingA = {
-      nextRefName = refName
-      return this
-    }
-    def entitya (arg: String)(implicit areal: Areal): EntityA = {
-      val e = new EntityA(arg)
-      e.bindToAreal(areal)
-      registerReference(e)
-      return e
-    }
-  }
-
-  object ArealA extends Tray[EntityPageBase]
-
-  class ArealA(implicit builder: Builder = null) extends Areal {
-    val companion = ArealA
-    var appendPoint = "ArealA"
-    val defaultPage = new PageA
-    setCurrentPage(defaultPage)
-    val ++ = new EntityBindingA
-    def newpage = {
-      addToList(getCurrentPage)
-      this
-    }
-    def page_to (p: Page) = {
-      setCurrentPage(p)
-      addToList(getCurrentPage)
-      this
-    }
-  }
-
-  object BuilderA extends Tray[Areal]
-
-  class BuilderA extends Builder {
-    val companion = BuilderA
-    val allPages = new PageA :: new PageB :: Nil
-    def generateJsSpecialEntities = """
-      var specialEntities = [
-        {
-          templateId: "footer",
-          json: {pageNr: "@nextPageNr"},
-          requiredPageAppendPoint: "footer"
-        }
-      ];
-    """.replaceAllLiterally("  ", "").replaceAllLiterally("\n", "")
-  }
-
-  trait TemplateStockA extends TemplateStock {
-    addTemplateEntity("heading", "<script>...heading...</script>")
-    addTemplateEntity("text", "<script>...text...</script>")
-  }
   private var tmplSt: TemplateStock = _
 
   // SETUP

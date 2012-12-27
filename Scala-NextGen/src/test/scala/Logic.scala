@@ -19,14 +19,6 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
 
   }
 
-  describe("A IdNumber") {
-
-    it("should extend an entity with an id variable") (pending)
-
-    it("should give an id number to every entity added to an areal") (pending)
-
-  }
-
   describe("A FigureNumber") {
 
     it("should extend an entity with an figure number variable") (pending)
