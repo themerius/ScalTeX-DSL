@@ -63,30 +63,79 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
 
   describe("A SectionNumber") {
 
-    it("should extend an entity with a section variable") (pending)
+    class SectionNumberEntity extends EntityA with SectionNumber
+    class ChapterEntity extends EntityA with Chapter
+    class SectionEntity extends EntityA with Section
+    class SubSectionEntity extends EntityA with SubSection
+    class SubSubSectionEntity extends EntityA with SubSubSection
 
-    it("should count sections entities hierachial") (pending)
+    it("should extend an entity with a section variable") {
+      (new SectionNumberEntity).sectionNumber should be === null
+    }
 
-    it("should have a `getSectionNumbering` method") (pending)
+    it("should have a `getSectionNumber` method") {
+      val sec = new SectionNumberEntity
+      evaluating {
+        sec.bindToAreal(areal)
+        sec.getSectionNumber
+      } should produce [Exception]
+    }
 
     describe("A Chapter") {
-      it("should count all chapters") (pending)
+
+      it("should count all chapters") {
+        val chp = new ChapterEntity
+        chp.bindToAreal(areal)
+        chp.sectionNumber should be === "1"
+      }
+
     }
 
     describe("A Section") {
-      it("should count in it's capter all sections") (pending)
+
+      it("should count in it's capter all sections") {
+        val chp = new ChapterEntity
+        val sec = new SectionEntity
+        chp.bindToAreal(areal)
+        sec.bindToAreal(areal)
+        sec.sectionNumber should be === "1.1"
+      }
+
     }
 
     describe("A SubSection") {
-      it("should count in it's section all subsections") (pending)
+
+      it("should count in it's section all subsections") {
+        val chp = new ChapterEntity
+        val sec = new SectionEntity
+        val ssc = new SubSectionEntity
+        chp.bindToAreal(areal)
+        sec.bindToAreal(areal)
+        ssc.bindToAreal(areal)
+        ssc.sectionNumber should be === "1.1.1"
+      }
+
     }
 
     describe("A SubSubSection") {
-      it("should count in it's subsection all subsubsections") (pending)
+
+      it("should count in it's subsection all subsubsections") {
+        val chp = new ChapterEntity
+        val sec = new SectionEntity
+        val ssc = new SubSectionEntity
+        val sss = new SubSubSectionEntity
+        chp.bindToAreal(areal)
+        sec.bindToAreal(areal)
+        ssc.bindToAreal(areal)
+        sss.bindToAreal(areal)
+        sss.sectionNumber should be === "1.1.1.1"
+      }
+
     }
 
     describe("A TableOfContents") {
       it("should filter all instances of SectionNumber returned as List") (pending)
+      it("extends an areal class") (pending)
     }
 
   }

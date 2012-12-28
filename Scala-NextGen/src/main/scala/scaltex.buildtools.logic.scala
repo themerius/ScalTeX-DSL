@@ -11,3 +11,53 @@ trait FigureNumber extends Logic with Entity {
   override def execLogic =
     figureNumber = areal.companion.get.filter(_.isInstanceOf[FigureNumber]).length
 }
+
+trait SectionNumber extends Logic with Entity {
+  var sectionNumber: String = _
+  def getSectionNumber: String = {
+    var h1Count = 0
+    var h2Count = 0
+    var h3Count = 0
+    var h4Count = 0
+    val sections = areal.companion.get.filter(_.isInstanceOf[SectionNumber])
+    for (section <- sections) {
+      section match {
+        case _: Chapter => {
+          h1Count += 1
+          h2Count = 0
+        }
+        case _: Section => {
+          h2Count += 1
+          h3Count = 0
+        }
+        case _: SubSection => {
+          h3Count += 1
+          h4Count = 0
+        }
+        case _: SubSubSection => {
+          h4Count += 1
+        }
+        case _ => throw new Exception("Unknown SectionNumber.")
+      }
+    }
+
+    var ret = ""
+    if (this.isInstanceOf[Chapter])
+      ret += h1Count
+    if (this.isInstanceOf[Section])
+      ret += h1Count + "." + h2Count
+    if (this.isInstanceOf[SubSection])
+      ret += h1Count + "." + h2Count + "." + h3Count
+    if (this.isInstanceOf[SubSubSection])
+      ret += h1Count + "." + h2Count + "." + h3Count + "." + h4Count
+    return ret
+  }
+  override def execLogic = {
+    sectionNumber = getSectionNumber
+  }
+}
+
+trait Chapter extends SectionNumber
+trait Section extends SectionNumber
+trait SubSection extends SectionNumber
+trait SubSubSection extends SectionNumber
