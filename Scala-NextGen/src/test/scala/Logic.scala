@@ -1,18 +1,30 @@
-package scaltex.test
+package scaltex.test.logic
 
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.matchers.ShouldMatchers._
 
 import scaltex.buildtools.logic._
+import scaltex.test.buildtools.{ArealA}
+import scaltex.buildtools.{Tray, Entity, EntityPageBase}
 
+object ArealAA extends Tray[EntityPageBase]
+
+class EntityA extends Entity {
+  override val id: Int = -1  // otherwise causes concurrency issues
+  var appendPoint = "content"
+  val templateId = "EntityA"
+  def toJson = "{}"
+}
 
 class LogicSpec extends FunSpec with BeforeAndAfterEach {
 
   private var areal: ArealA = _
 
   override def beforeEach() {
-    areal = new ArealA
+    areal = new ArealA {
+      override val companion = ArealAA
+    }
   }
 
   override def afterEach() {
@@ -30,18 +42,18 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
 
   describe("A FigureNumber") {
 
-    class FigureEntity (a: String) extends EntityA(a) with FigureNumber
+    class FigureEntity extends EntityA with FigureNumber
 
     it("should extend an entity with an figure number variable") {
-      val fig = new FigureEntity("test")
+      val fig = new FigureEntity
       fig.figureNumber should be === -1
       fig.bindToAreal(areal)
       fig.figureNumber should be === 1
     }
 
     it("should count figures and set the appropriate number for the particular figure") {
-      val fig1 = new FigureEntity("test1")
-      val fig2 = new FigureEntity("test2")
+      val fig1 = new FigureEntity
+      val fig2 = new FigureEntity
       fig1.bindToAreal(areal)
       fig2.bindToAreal(areal)
       fig1.figureNumber should be === 1

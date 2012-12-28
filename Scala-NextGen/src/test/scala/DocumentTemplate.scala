@@ -1,4 +1,4 @@
-package scaltex.test
+package scaltex.test.buildtools
 
 import org.scalatest.FunSpec
 import org.scalatest.BeforeAndAfterEach
@@ -71,7 +71,7 @@ class EntityBindingA extends EntityBinding {
 object ArealA extends Tray[EntityPageBase]
 
 class ArealA(implicit builder: Builder = null) extends Areal {
-  val companion = ArealA
+  val companion: Tray[EntityPageBase] = ArealA
   var appendPoint = "ArealA"
   val defaultPage = new PageA
   setCurrentPage(defaultPage)
