@@ -109,7 +109,8 @@ class HeadingSubSection (heading: String) extends Heading (heading) with SubSect
 class HeadingSubSubSection (heading: String) extends Heading (heading) with SubSubSection
 
 
-class Text (txt: String) extends Entity {
+class Text (txt: () => String) extends Entity {
+  def this (txt: String) = this(() => txt)
   var appendPoint = "content"
   val templateId = "text_1110"
   def toJson = Json.toJson(
@@ -118,7 +119,7 @@ class Text (txt: String) extends Entity {
       "json" -> Json.toJson(
         Map(
           "id" -> Json.toJson(id),
-          "text" -> Json.toJson(txt)
+          "text" -> Json.toJson(txt())
         )
       )
     )
@@ -191,6 +192,12 @@ class FraunhoferReportEntityBinding extends academic.EntityBinding {
     val text = new Text(t)
     text.bindToAreal(areal)
     registerReference(text)
+    return text 
+  }
+  def txt (t: () => String)(implicit areal: Areal): Text = {
+    val text = new Text(t)
+    text.bindToAreal(areal)
+    registerReference(text)
     return text
   }
   def figure (src: String, desc: String)(implicit areal: Areal): Figure = {
@@ -203,7 +210,7 @@ class FraunhoferReportEntityBinding extends academic.EntityBinding {
 
 object Document extends Tray[EntityPageBase]
 
-class Document (implicit builder: Builder=null) extends Areal {
+class Document (implicit builder: Builder=null) extends Areal with scaltex.util.$StringContext {
   val companion: Tray[EntityPageBase] = Document
   var appendPoint = "Document"
   val defaultPage = new PageA4

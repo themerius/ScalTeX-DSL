@@ -52,7 +52,7 @@ class DynamicObject extends DynamicBase {
 
 import scala.language.implicitConversions
 
-object $StringContext {
+trait $StringContext {
   implicit def byname_to_noarg[A](a: => A) = () => a
 
   case class StringContext(parts: String*) {

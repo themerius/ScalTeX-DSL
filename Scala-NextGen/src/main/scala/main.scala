@@ -26,8 +26,8 @@ object Chapter_1 extends Document {
     sed diam voluptua.
   """
 
-  ++ txt """
-    Lorem ipsum Abb. ${Chapter_1.figname.number} dolor sit amet, consetetur
+  ++ txt $"""
+    Lorem ipsum Abb. ${Chapter_1.figname.figureNumber} dolor sit amet, consetetur
     sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
@@ -40,7 +40,7 @@ object Chapter_1 extends Document {
 
   ++ §§ "Fazit"
 
-  ++ §§§ "Überschrift 3. Ordnung"
+  ++ §§§ "Überschrift 3. Ordnung"   $ "ueb"
 
   ++ txt """
     <em>Lorem ipsum</em> dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -48,13 +48,13 @@ object Chapter_1 extends Document {
     sed diam voluptua.
   """
 
-  ++ figure(
+  ++ $ "figname" figure(
     src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
     desc="Matplotlib example histogramm"
   )
 
-  ++ txt """
-    Lorem ipsum Abb. ${Chapter_2.otherfig.number} dolor sit amet, consetetur
+  ++ txt $"""
+    Lorem ipsum Abb. ${Chapter_2.otherfig.figureNumber} dolor sit amet, consetetur
     sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
@@ -64,13 +64,14 @@ object Chapter_1 extends Document {
 object Chapter_2 extends Document {
   ++ § "Other"
 
-  ++ figure(
+  ++ $ "otherfig" figure(
     src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
     desc="Matplotlib example histogramm"
   )
 
-  ++ txt """
+  ++ txt $"""
     Paragraph within Other.
-    Reference on Fig ${Chapter_1.figname.number} in Chapter 1.
+    Reference on Fig ${Chapter_1.figname.figureNumber} in
+    chapter ${Chapter_1.ueb.sectionNumber}.
   """
 }

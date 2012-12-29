@@ -10,6 +10,7 @@ import scaltex.buildtools.{Areal, EntityBinding => EB, Entity, Page}
       def §§§ (h: String)(implicit areal: Areal): Entity
       def §§§§ (h: String)(implicit areal: Areal): Entity
       def txt (t: String)(implicit areal: Areal): Entity
+      def txt (t: () => String)(implicit areal: Areal): Entity
       def figure (src: String, desc: String)(implicit areal: Areal): Entity
     }
 
