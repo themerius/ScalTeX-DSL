@@ -1,6 +1,6 @@
 package scaltex.buildtools.logic
 
-import scaltex.buildtools.Entity
+import scaltex.buildtools.{Entity, Areal}
 
 trait Logic {
   def execLogic: Unit = None
@@ -61,3 +61,5 @@ trait Chapter extends SectionNumber
 trait Section extends SectionNumber
 trait SubSection extends SectionNumber
 trait SubSubSection extends SectionNumber
+
+

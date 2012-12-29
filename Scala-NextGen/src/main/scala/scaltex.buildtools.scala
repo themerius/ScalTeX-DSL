@@ -120,12 +120,12 @@ class Generator (areal: Areal) {
     val entities = getEntityPageList
 
     var ret = "var " + areal.appendPoint + " = ["
-    ret += "{pageType: \"" + entities.head.templateId + "\",entities: ["
+    ret += "{pageType: \"" + entities.head.asInstanceOf[Page].officialName + "\",entities: ["
 
     for (entity <- entities.tail) {
       if (entity.isInstanceOf[Page]) {
         ret += "]},"  // close the page before
-        ret += "{pageType: \"" + entity.templateId + "\",entities: ["
+        ret += "{pageType: \"" + entity.asInstanceOf[Page].officialName + "\",entities: ["
       } else {
         ret += entity.toJson + ","
       }

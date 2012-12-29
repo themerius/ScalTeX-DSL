@@ -1,16 +1,16 @@
 package scaltex.types {
 
-import scaltex.buildtools.{Areal, EntityBinding => EB, Page}
+import scaltex.buildtools.{Areal, EntityBinding => EB, Entity, Page}
 
   package academic {
 
     trait EntityBinding extends EB {
-      def § (h: String)(implicit areal: Areal)
-      def §§ (h: String)(implicit areal: Areal)
-      def §§§ (h: String)(implicit areal: Areal)
-      def §§§§ (h: String)(implicit areal: Areal)
-      def txt (t: String)(implicit areal: Areal)
-      def figure (src: String, desc: String)(implicit areal: Areal)
+      def § (h: String)(implicit areal: Areal): Entity
+      def §§ (h: String)(implicit areal: Areal): Entity
+      def §§§ (h: String)(implicit areal: Areal): Entity
+      def §§§§ (h: String)(implicit areal: Areal): Entity
+      def txt (t: String)(implicit areal: Areal): Entity
+      def figure (src: String, desc: String)(implicit areal: Areal): Entity
     }
 
     trait Pages {
