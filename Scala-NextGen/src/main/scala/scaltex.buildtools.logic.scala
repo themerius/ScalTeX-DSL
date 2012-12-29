@@ -14,6 +14,10 @@ trait FigureNumber extends Logic with Entity {
 
 trait SectionNumber extends Logic with Entity {
   var sectionNumber: String = _
+  val h: String
+}
+
+trait SectionNumberAlgorithm extends SectionNumber {
   def getSectionNumber: String = {
     var h1Count = 0
     var h2Count = 0
@@ -57,9 +61,17 @@ trait SectionNumber extends Logic with Entity {
   }
 }
 
-trait Chapter extends SectionNumber
-trait Section extends SectionNumber
-trait SubSection extends SectionNumber
-trait SubSubSection extends SectionNumber
+trait Chapter extends SectionNumberAlgorithm {
+  val h = "h1"
+}
+trait Section extends SectionNumberAlgorithm {
+  val h = "h2"
+}
+trait SubSection extends SectionNumberAlgorithm {
+  val h = "h3"
+}
+trait SubSubSection extends SectionNumberAlgorithm {
+  val h = "h4"
+}
 
 

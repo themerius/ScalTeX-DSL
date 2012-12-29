@@ -63,22 +63,21 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
 
   describe("A SectionNumber") {
 
-    class SectionNumberEntity extends EntityA with SectionNumber
+    class SectionNumberEntity extends EntityA with SectionNumber {
+      sectionNumber = "1"
+      val h = "h1"
+    }
     class ChapterEntity extends EntityA with Chapter
     class SectionEntity extends EntityA with Section
     class SubSectionEntity extends EntityA with SubSection
     class SubSubSectionEntity extends EntityA with SubSubSection
 
     it("should extend an entity with a section variable") {
-      (new SectionNumberEntity).sectionNumber should be === null
+      (new SectionNumberEntity).sectionNumber should be === "1"
     }
 
-    it("should have a `getSectionNumber` method") {
-      val sec = new SectionNumberEntity
-      evaluating {
-        sec.bindToAreal(areal)
-        sec.getSectionNumber
-      } should produce [Exception]
+    it("should extend an entity with a h variable") {
+      (new SectionNumberEntity).h should be === "h1"
     }
 
     describe("A Chapter") {
@@ -87,6 +86,7 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
         val chp = new ChapterEntity
         chp.bindToAreal(areal)
         chp.sectionNumber should be === "1"
+        chp.h should be === "h1"
       }
 
     }
@@ -99,6 +99,7 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
         chp.bindToAreal(areal)
         sec.bindToAreal(areal)
         sec.sectionNumber should be === "1.1"
+        sec.h should be === "h2"
       }
 
     }
@@ -113,6 +114,7 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
         sec.bindToAreal(areal)
         ssc.bindToAreal(areal)
         ssc.sectionNumber should be === "1.1.1"
+        ssc.h should be === "h3"
       }
 
     }
@@ -129,6 +131,7 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
         ssc.bindToAreal(areal)
         sss.bindToAreal(areal)
         sss.sectionNumber should be === "1.1.1.1"
+        sss.h should be === "h4"
       }
 
     }

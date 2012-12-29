@@ -85,7 +85,7 @@ trait FraunhoferReportTemplate extends TemplateStock {
   """)
 }
 
-class Heading (heading: String) extends Entity {
+abstract class Heading (heading: String) extends Entity with SectionNumber {
   var appendPoint = "content"
   val templateId = "heading"
   def toJson = Json.toJson(
@@ -94,7 +94,9 @@ class Heading (heading: String) extends Entity {
       "json" -> Json.toJson(
         Map(
           "id" -> Json.toJson(id),
-          "heading" -> Json.toJson(heading)
+          "heading" -> Json.toJson(heading),
+          "number" -> Json.toJson(sectionNumber),
+          "h" -> Json.toJson(h)
         )
       )
     )
@@ -123,7 +125,7 @@ class Text (txt: String) extends Entity {
   ).toString
 }
 
-class Figure (src: String, desc: String) extends Entity {
+class Figure (src: String, desc: String) extends Entity with FigureNumber {
   var appendPoint = "content"
   val templateId = "figure_1100"
   def toJson = Json.toJson(
@@ -133,7 +135,8 @@ class Figure (src: String, desc: String) extends Entity {
         Map(
           "id" -> Json.toJson(id),
           "src" -> Json.toJson(src),
-          "description" -> Json.toJson(desc)
+          "description" -> Json.toJson(desc),
+          "number" -> Json.toJson(figureNumber)
         )
       )
     )

@@ -281,21 +281,21 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
         val expect = """
           var ArealA = [
             {
-              pageType: "PageA",
+              pageType: "A4",
               entities: [
                 {"templateId":"EntityA","json":{"id":2,"a":"test1"}},
                 {"templateId":"EntityA","json":{"id":3,"a":"test2"}},
               ]
             },
             {
-              pageType: "PageB",
+              pageType: "A4Horizontal",
               entities: [
                 {"templateId":"EntityA","json":{"id":4,"a":"test3"}},
                 {"templateId":"EntityA","json":{"id":5,"a":"test4"}},
               ]
             },
             {
-              pageType: "PageB",
+              pageType: "A4Horizontal",
               entities: [
                 {"templateId":"EntityA","json":{"id":6,"a":"test5"}},
                 {"templateId":"EntityA","json":{"id":7,"a":"test6"}},
@@ -360,7 +360,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
       BuilderObject.generateJsEntityInstances should be === """
         var ArealA = [
           {
-            pageType: "PageA",
+            pageType: "A4",
             entities: [
               {"templateId":"EntityA","json":{"id":2,"a":"test1"}},
               {"templateId":"EntityA","json":{"id":3,"a":"test2"}},
@@ -473,7 +473,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
         <script>
         var ArealA = [
           {
-            pageType: "PageA",
+            pageType: "A4",
             entities: [
               {"templateId":"EntityA","json":{"id":2,"a":"test1"}},
               {"templateId":"EntityA","json":{"id":3,"a":"test2"}},
