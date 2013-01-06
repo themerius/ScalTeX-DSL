@@ -4,13 +4,16 @@ import scaltex.template.fraunhofer._
 
 object Doc extends FraunhoferReportBuilder {
 
-  new Document
+  val toc = new TableOfContents
+  val doc = new Document
 
   set document_name "Example Document"
   set institut_name "Fraunhofer SCAI"
 
   Chapter_1
   Chapter_2
+
+  toc.scanHeadings(doc)
 
   def main(args: Array[String]) {
     write("_output/output.html")

@@ -137,8 +137,15 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
     }
 
     describe("A TableOfContents") {
-      it("should filter all instances of SectionNumber returned as List") (pending)
-      it("extends an areal class") (pending)
+
+      it("extends an areal class") {
+        ;
+      }
+
+      it("should filter all instances of SectionNumber returned as List") {
+        ;
+      }
+
     }
 
   }

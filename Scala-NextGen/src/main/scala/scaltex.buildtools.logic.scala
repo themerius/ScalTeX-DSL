@@ -73,5 +73,3 @@ trait SubSection extends SectionNumberAlgorithm {
 trait SubSubSection extends SectionNumberAlgorithm {
   val h = "h4"
 }
-
-

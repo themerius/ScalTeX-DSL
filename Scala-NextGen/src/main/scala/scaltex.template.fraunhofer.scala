@@ -82,10 +82,46 @@ trait FraunhoferReportTemplate extends TemplateStock {
       <div class="row-end">&nbsp;</div>
     </div>
     </script>
-  """)
+    """)
+
+  addTemplateEntity (
+    "toc",
+    """
+    <script id="toc_heading" type="text/template">
+    <div class="row tocHeading">
+      <div class="col4"><h1>{{heading}}</h1></div>
+      <div class="row-end">&nbsp;</div>
+    </div>
+    </script>
+
+    <script id="toc_mainSection" type="text/template">
+    <div class="row tocMainSection">
+      <div class="col3 tocLine">
+        <span class="tocTitle tocFloatingDots">{{nr}}</br>{{title}} . . . . . . .
+          . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+          . . . . . . . . . . . . . . . . . . . . . . . . . . . </span>
+        <span class="tocNumbering"></br>&nbsp;{{page}}</span>
+      </div>
+      <div class="row-end">&nbsp;</div>
+    </div>
+    </script>
+
+    <script id="toc_section" type="text/template">
+    <div class="row">
+      <div class="col3 tocLine">
+        <span class="tocTitle tocFloatingDots">{{nr}}</br>{{title}} . . . . . . .
+          . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+          . . . . . . . . . . . . . . . . . . . . . . . . . . . </span>
+        <span class="tocNumbering"></br>&nbsp;{{page}}</span>
+      </div>
+      <div class="row-end">&nbsp;</div>
+    </div>
+    </script>
+    """)
+
 }
 
-abstract class Heading (heading: String) extends Entity with SectionNumber {
+abstract class Heading (val heading: String) extends Entity with SectionNumber {
   var appendPoint = "content"
   val templateId = "heading"
   def toJson = Json.toJson(
@@ -144,6 +180,58 @@ class Figure (src: String, desc: String) extends Entity with FigureNumber {
           "src" -> Json.toJson(src),
           "description" -> Json.toJson(desc),
           "number" -> Json.toJson(figureNumber)
+        )
+      )
+    )
+  ).toString
+}
+
+class TOCHead (heading: String) extends Entity {
+  var appendPoint = "content"
+  val templateId = "toc_heading"
+  def toJson = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson(templateId),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(id),
+          "heading" -> Json.toJson(heading)
+        )
+      )
+    )
+  ).toString
+}
+
+class TOCMainSection (nr: String, title: String) extends Entity {
+  var appendPoint = "content"
+  val templateId = "toc_mainSection"
+  def toJson = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson(templateId),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(id),
+          "nr" -> Json.toJson(nr),
+          "title" -> Json.toJson(title),
+          "page" -> Json.toJson("~~")
+        )
+      )
+    )
+  ).toString
+}
+
+class TOCSection (nr: String, title: String) extends Entity {
+  var appendPoint = "content"
+  val templateId = "toc_section"
+  def toJson = Json.toJson(
+    Map(
+      "templateId" -> Json.toJson(templateId),
+      "json" -> Json.toJson(
+        Map(
+          "id" -> Json.toJson(id),
+          "nr" -> Json.toJson(nr),
+          "title" -> Json.toJson(title),
+          "page" -> Json.toJson("~~")
         )
       )
     )
@@ -230,6 +318,33 @@ class Document (implicit builder: Builder=null) extends Areal with scaltex.util.
     setCurrentPage(p)
     addToList(getCurrentPage)
     this
+  }
+}
+
+object TableOfContents extends Tray[EntityPageBase]
+
+class TableOfContents (implicit builder: Builder=null) extends Areal {
+  val companion: Tray[EntityPageBase] = TableOfContents
+  var appendPoint = "TableOfContents"
+  val defaultPage = new PageA4
+  setCurrentPage(defaultPage)
+  val ++ = new FraunhoferReportEntityBinding
+  def newpage = this
+  def page_to (p: Page) = this
+
+  addToList(new TOCHead("Inhalt"))
+
+  def scanHeadings (areals: Areal*) = {
+    for (areal <- areals) {
+      areal.companion.get.foreach { x =>
+        x match {
+          case c: HeadingChapter => addToList(new TOCMainSection(c.sectionNumber, c.heading))
+          case s: HeadingSection => addToList(new TOCSection(s.sectionNumber, s.heading))
+          case s: HeadingSubSection => addToList(new TOCSection(s.sectionNumber, s.heading))
+          case _ => None
+        }
+      }
+    }
   }
 }
 
