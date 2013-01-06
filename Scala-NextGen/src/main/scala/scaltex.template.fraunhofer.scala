@@ -113,13 +113,19 @@ class Text (txt: () => String) extends Entity {
   def this (txt: String) = this(() => txt)
   var appendPoint = "content"
   val templateId = "text_1110"
+  var newlineList: List[Boolean] = List()
+  def newline: Text = {
+    newlineList = true :: newlineList
+    this
+  }
   def toJson = Json.toJson(
     Map(
       "templateId" -> Json.toJson(templateId),
       "json" -> Json.toJson(
         Map(
           "id" -> Json.toJson(id),
-          "text" -> Json.toJson(txt())
+          "text" -> Json.toJson(txt()),
+          "newline" -> Json.toJson(newlineList)
         )
       )
     )
@@ -232,11 +238,14 @@ object FraunhoferReportBuilder extends Tray[Areal]
 class FraunhoferReportBuilder extends Builder with FraunhoferReportTemplate {
   val companion = FraunhoferReportBuilder
   val allPages = new PageA4 :: Nil
-  def generateJsSpecialEntities = """
+  override val set = this
+  var institutName = "Fraunhofer"
+  def institut_name (name: String) = institutName = name
+  def generateJsSpecialEntities = s"""
     var specialEntities = [
       {
-        templateId: "footer",
-        json: {pageNr: "@nextPageNr"},
+        templateId: "pagina",
+        json: {institutName: "$institutName", pageNr: "@nextPageNr"},
         requiredPageAppendPoint: "footer"
       }
     ];

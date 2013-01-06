@@ -4,7 +4,10 @@ import scaltex.template.fraunhofer._
 
 object Doc extends FraunhoferReportBuilder {
 
-  (new Document)
+  new Document
+
+  set document_name "Example Document"
+  set institut_name "Fraunhofer SCAI"
 
   Chapter_1
   Chapter_2
@@ -26,13 +29,14 @@ object Chapter_1 extends Document {
     sed diam voluptua.
   """
 
-  ++ txt $"""
+  ++ $ "text_x" txt $"""
     Lorem ipsum Abb. ${Chapter_1.figname.figureNumber} dolor sit amet, consetetur
     sadipscing elitr, sed diam
     nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
     sed diam voluptua.
   """
 
+  Chapter_1.text_x.newline.newline
 
   ++ § "Beispiel"
 
