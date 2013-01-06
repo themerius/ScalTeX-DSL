@@ -56,6 +56,7 @@ trait $StringContext {
   implicit def byname_to_noarg[A](a: => A) = () => a
 
   case class StringContext(parts: String*) {
+    def s (args: Any*) = scala.StringContext(parts: _*).s(args: _*)
     def $ (args: (() => Any)*) = () => {
       val unpacked = args.map(a => a())
       scala.StringContext(parts: _*).s(unpacked: _*)

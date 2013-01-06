@@ -4,7 +4,7 @@ import scaltex.template.fraunhofer._
 
 object Doc extends FraunhoferReportBuilder {
 
-  val toc = new TableOfContents
+  val toc = new TableOfContents(doc)
   val doc = new Document
 
   set document_name "Example Document"
@@ -13,7 +13,7 @@ object Doc extends FraunhoferReportBuilder {
   Chapter_1
   Chapter_2
 
-  toc.scanHeadings(doc)
+  toc.create
 
   def main(args: Array[String]) {
     write("_output/output.html")

@@ -323,7 +323,7 @@ class Document (implicit builder: Builder=null) extends Areal with scaltex.util.
 
 object TableOfContents extends Tray[EntityPageBase]
 
-class TableOfContents (implicit builder: Builder=null) extends Areal {
+class TableOfContents (areals: (() => Areal)*)(implicit builder: Builder=null) extends Areal {
   val companion: Tray[EntityPageBase] = TableOfContents
   var appendPoint = "TableOfContents"
   val defaultPage = new PageA4
@@ -334,8 +334,9 @@ class TableOfContents (implicit builder: Builder=null) extends Areal {
 
   addToList(new TOCHead("Inhalt"))
 
-  def scanHeadings (areals: Areal*) = {
-    for (areal <- areals) {
+  def create = {
+    val unpacked = areals.map(a => a())
+    for (areal <- unpacked) {
       areal.companion.get.foreach { x =>
         x match {
           case c: HeadingChapter => addToList(new TOCMainSection(c.sectionNumber, c.heading))
@@ -350,7 +351,7 @@ class TableOfContents (implicit builder: Builder=null) extends Areal {
 
 object FraunhoferReportBuilder extends Tray[Areal]
 
-class FraunhoferReportBuilder extends Builder with FraunhoferReportTemplate {
+class FraunhoferReportBuilder extends Builder with FraunhoferReportTemplate with scaltex.util.$StringContext {
   val companion = FraunhoferReportBuilder
   val allPages = new PageA4 :: Nil
   override val set = this
