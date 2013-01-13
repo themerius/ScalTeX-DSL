@@ -136,27 +136,6 @@ class LogicSpec extends FunSpec with BeforeAndAfterEach {
 
     }
 
-    describe("A TableOfContents") {
-
-      it("extends an areal class") {
-        ;
-      }
-
-      it("should filter all instances of SectionNumber returned as List") {
-        ;
-      }
-
-    }
-
   }
-
-  describe("A PythonScript") {
-
-    it("should construct a py-file out of a string") (pending)
-
-    it("should be able to execute the py file and its catch the std:out") (pending)
-
-  }
-
 
 }
