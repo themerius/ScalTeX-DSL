@@ -22,6 +22,14 @@ trait FraunhoferReportTemplate extends TemplateStock {
     <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
     <body>
+    <script>
+    // Mathjax Config
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ [':inlinemath:',':inlinem:'] ],
+        displayMath: [ [':math:',':math:'] ]}
+    });
+    </script>
   """
 
   footerTemplate = """
@@ -329,6 +337,7 @@ class TableOfContents (areals: (() => Areal)*)(implicit builder: Builder=null) e
   val defaultPage = new PageA4
   setCurrentPage(defaultPage)
   val ++ = new FraunhoferReportEntityBinding
+  override val pageNumberStyle = "roman"
   def newpage = this
   def page_to (p: Page) = this
 

@@ -7,11 +7,11 @@ object Doc extends FraunhoferReportBuilder {
   val toc = new TableOfContents(doc)
   val doc = new Document
 
-  set document_name "Example Document"
+  set document_name "Textsatzsysteme"
   set institut_name "Fraunhofer SCAI"
 
-  Chapter_1
-  Chapter_2
+  KapitelTextsatz
+  KapitelScaltex
   PythonPlot
 
   toc.create
@@ -21,96 +21,115 @@ object Doc extends FraunhoferReportBuilder {
   }
 }
 
-// import scaltex.template.patent._
+object KapitelTextsatz extends Document {
 
-// object Doc extends PatentBuilder {
-
-//   val doc = new Document
-
-//   set document_name "Example Document"
-
-//   Chapter_1
-//   Chapter_2
-//   PythonPlot
-
-//   def main(args: Array[String]) {
-//     write("_output/output_patent.html")
-//   }
-// }
-
-object Chapter_1 extends Document {
-
-  ++ § "Überschrift"
-
-  ++ §§ "Unterüberschrift"
+  ++ § "Textsatzsysteme: Einleitung"
 
   ++ txt """
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-    sed diam voluptua.
+    Textsatzsysteme übernehmen „das rechnergestützte Setzen von Dokumenten,
+    die aus Texten und Bildern bestehen und später als Publikationen,
+    wie zum Beispiel Broschüren, Magazine, Bücher oder Kataloge,
+    ihre Verwendung finden.“ (http://de.wikipedia.org/wiki/Textsatzsystem)
   """
 
-  ++ $ "text_x" txt $"""
-    Lorem ipsum Abb. ${Chapter_1.figname.figureNumber} dolor sit amet, consetetur
-    sadipscing elitr, sed diam
-    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-    sed diam voluptua.
+  ++ $ "abs1" txt $"""
+    Dieses Dokument stellt ein neues Textsatzsystem vor, davon mehr in
+    Kapitel ${KapitelScaltex.scaltex.sectionNumber}!
   """
 
-  Chapter_1.text_x.newline.newline
+  KapitelTextsatz.abs1.newline.newline
 
-  ++ § "Beispiel"
-
-  ++ §§ "Konkretes Beispiel"
-
-  ++ §§ "Fazit"
-
-  ++ §§§ "Überschrift 3. Ordnung"   $ "ueb"
-
-  ++ txt """
-    <em>Lorem ipsum</em> dolor sit amet, consetetur sadipscing elitr, sed diam
-    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-    sed diam voluptua.
-  """
-
-  ++ $ "figname" figure(
-    src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
-    desc="Matplotlib example histogramm"
-  )
+  ++ §§ "TeX"
 
   ++ txt $"""
-    Lorem ipsum Abb. ${Chapter_2.otherfig.figureNumber} dolor sit amet, consetetur
-    sadipscing elitr, sed diam
-    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-    sed diam voluptua.
+    TeX ist eine weit verbreitete Programmiersprache die speziell für die
+    Aufgaben eines Textsatzsystem erschaffen wurde.
+    Mit TeX lassen sich qualitativ hochwertige Dokumente setzen,
+    und ist insbesondere im mathematisch-naturwissenschaftlichen Bereich
+    defacto Standard.
+    Auf Abbildung ${KapitelTextsatz.tex_logo.figureNumber} ist das Logo
+    von TeX zu sehen.
+  """
+
+  ++ $ "tex_logo" figure(
+    src="http://upload.wikimedia.org/wikipedia/commons/thumb/6/68/TeX_logo.svg/500px-TeX_logo.svg.png",
+    desc="TeX Logo."
+  )
+
+  ++ txt """
+    TeX produziert als Ausgabeformat DVI-Dateien, wobei es mittlerweile
+    auch Modifikationen gibt, die PDF-Dateien produzieren.
+    <br/><br/>
+  """
+
+  ++ §§§ "Mathematik und TeX"  $ "mathe_tex"
+
+  ++ txt """
+    TeX selbst besitzt ausgezeichnete Fähigkeiten zum Setzen mathematischer
+    Ausdrücke, daher ist es eben im mathematisch-naturwissenschaftlichen
+    Bereich so außerordentlich beliebt.
+    <br/><br/>
+  """
+
+  ++ §§ "Andere Systeme"
+
+  ++ txt $"""
+    Es gibt sehr viele Systeme auf dem Markt. Neben TeX gibt es auch noch
+    Microsoft Word oder Adobe Illustrator, und noch viele andere.
+    Aber in Kapitel ${KapitelScaltex.scaltex.sectionNumber} wird
+    ein neues System vorgestellt.
   """
 }
 
-object Chapter_2 extends Document {
-  ++ § "Other"
+object KapitelScaltex extends Document {
 
-  ++ $ "otherfig" figure(
-    src="https://raw.github.com/themerius/ScalTeX/play/public/images/plot.png",
-    desc="Matplotlib example histogramm"
-  )
+  newpage
+
+  ++ § "Codename „ScalTeX“"  $ "scaltex"
+
+  ++ txt """
+    Ist ein neues Textsatzsystem, welches im Zuge dieser Bachelorarbeit
+    entwickelt wurde und als Resultat HTML-Dateien, mit der
+    Anmut eines Printdokuments, produziert.
+  """
 
   ++ txt $"""
-    Paragraph within Other.
-    Reference on Fig ${Chapter_1.figname.figureNumber} in
-    chapter ${Chapter_1.ueb.sectionNumber}.
+    In Kapitel ${KapitelTextsatz.mathe_tex.sectionNumber} wurde darauf
+    eingegangen, dass TeX außerordentliche Fähigkeiten besitzt, was
+    den Mathesatz betrifft.
+    ScalTeX auch TeX-Befehle verarbeiten,
+    dank der MathJax JavaScript-Bibliothek. Beispiel:
+    :math:
+      x(t)=\\frac1{\\sqrt{2\\pi}}\\int_{-2\\pi F}^{2\\pi F}
+           X(\\omega)e^{\\mathrm{i}\\omega\\,t}\\, d\\omega
+    :math:
+    <br/><br/>
+  """
+
+  ++ §§ "Vorwärtsverweise"
+
+  ++ txt """
+    Referenzierungen auf Entitäten innerhalb eines Dokuments sind
+    vollkommen normal. Auch hier wird gerade darauf zurückgegriffen!
+    Besondere Schwierigkeit ist, dass der Text meistens schon auf
+    die Entität hinweist, bevor sie angezeigt wird bzw. innerhalb des
+    Programms instanziiert wurde. Das Problem konnte jedoch
+    überwunden werden.
+    <br/><br/>
   """
 }
 
 object PythonPlot extends Document {
 
-  newpage
-
-  ++ § "Live generated Python Plot"
+  ++ §§ "Automatisierung: Live generierter Python-Plot"
 
   ++ txt $"""
-    Within figure ${PythonPlot.mplfig.figureNumber} is a live plot,
-    created with python's mathplotlib.
-    It was generated with this code:
+    Ein besonderer Clou ist die Möglichkeit mit anderen Programmen
+    innerhalb des Dokumenten-Bauprozesses zu interagieren.
+    Hier wird exemplarisch ein Stück Python-Code ausgeführt, welcher
+    einen Plot mit <code>matplotlib</code> produziert.
+    Der Plot in Abbildung ${PythonPlot.mplfig.figureNumber} wird also
+    zur Bauzeit des Dokuments erstellt und zwar aus diesem Codestück:
     <pre><code>
     $script
     </code></pre>
@@ -139,6 +158,6 @@ object PythonPlot extends Document {
 
   ++ $ "mplfig" figure(
     src=py.run,
-    desc="Plot with matplotlib."
+    desc="Automatisch generierter Plot mit <code>matplotlib</code>."
   )
 }

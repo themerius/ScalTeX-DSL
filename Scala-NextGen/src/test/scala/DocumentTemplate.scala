@@ -437,6 +437,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
       }
       builder.generateJsArealSetup should be === """
         var ArealA_areal = new scaltex.Areal("ArealA", ArealA, pageFactory, specialEntities);
+        ArealA_areal.pagenumberstyle = "arabic";
         ArealA_areal.generateEntities();
         ArealA_areal.renderEntities();
         ArealA_areal.mountEntitiesToConstructionArea();
@@ -520,6 +521,7 @@ class DocumentTemplateSpec extends FunSpec with BeforeAndAfterEach {
           },
         });
         var ArealA_areal = new scaltex.Areal("ArealA", ArealA, pageFactory, specialEntities);
+        ArealA_areal.pagenumberstyle = "arabic";
         ArealA_areal.generateEntities();
         ArealA_areal.renderEntities();
         ArealA_areal.mountEntitiesToConstructionArea();

@@ -49,6 +49,8 @@ abstract class Areal (implicit val builder: Builder) extends DynamicObject with 
 
   def addToList (e: EntityPageBase) = companion.add(e)
 
+  val pageNumberStyle = "arabic"
+
   val change = this
   def newpage: Areal
   def page_to (p: Page): Areal
@@ -171,6 +173,7 @@ trait Builder extends TemplateStock {
       ret += "var " + areal.appendPoint + "_areal = new scaltex.Areal("
       ret += "\"" + areal.appendPoint + "\", " + areal.appendPoint + ", "
       ret += "pageFactory, specialEntities);"
+      ret += areal.appendPoint + "_areal" + ".pagenumberstyle = \"" + areal.pageNumberStyle + "\";"
       ret += areal.appendPoint + "_areal" + ".generateEntities();"
       ret += areal.appendPoint + "_areal" + ".renderEntities();"
       ret += areal.appendPoint + "_areal" + ".mountEntitiesToConstructionArea();"
