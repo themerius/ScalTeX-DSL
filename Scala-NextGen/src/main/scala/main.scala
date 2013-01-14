@@ -12,7 +12,7 @@ object Doc extends FraunhoferReportBuilder {
 
   KapitelTextsatz
   KapitelScaltex
-  PythonPlot
+  //PythonPlot  // only use if python+matplotlib+numpy is installed!
 
   toc.create
 
